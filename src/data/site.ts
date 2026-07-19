@@ -4,10 +4,10 @@ export const site = {
   url: 'https://wardkhleif.com',
   title: 'Ward Khleif — Computer Science Student',
   description: 'Personal website of Ward Khleif, a computer science student sharing software projects, experiments, and things he is learning.',
-  // CONTACT PLACEHOLDERS — paste your real details between the quotes.
+  // CONTACT — add the public email when ready.
   email: '', // Example: 'hello@wardkhleif.com'
-  linkedinUrl: '', // Example: 'https://www.linkedin.com/in/your-profile/'
-  githubUrl: '', // Example: 'https://github.com/your-username'
+  linkedinUrl: 'https://www.linkedin.com/in/ward-khleif-3793aa384/',
+  githubUrl: 'https://github.com/ward12345',
 } as const;
 
 export const navigation = [
