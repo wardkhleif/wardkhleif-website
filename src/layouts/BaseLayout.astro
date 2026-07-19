@@ -15,12 +15,21 @@ const schemas = [{ '@context':'https://schema.org','@type':'Person',name:site.na
   <meta name="theme-color" content="#080B10" />
   <script is:inline>try{const t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;else if(matchMedia('(prefers-color-scheme:light)').matches)document.documentElement.dataset.theme='light'}catch(e){}</script>
   <script is:inline type="application/ld+json" set:html={JSON.stringify(schemas)} />
-</head><body><a class="skip-link" href="#main">Skip to content</a><Header /><main id="main"><slot /></main><Footer />
+</head><body><div class="scroll-progress" aria-hidden="true"></div><div class="cursor-aura" aria-hidden="true"></div><a class="skip-link" href="#main">Skip to content</a><Header /><main id="main"><slot /></main><Footer />
 <script is:inline>
   const root=document.documentElement,toggle=document.querySelector('.theme-toggle'),menu=document.querySelector('.menu'),nav=document.querySelector('#primary-nav');
   const update=()=>{const light=root.dataset.theme==='light';toggle?.setAttribute('aria-label',`Switch to ${light?'dark':'light'} theme`);document.querySelector('meta[name="theme-color"]')?.setAttribute('content',light?'#F7F8FA':'#080B10')};
   update();toggle?.addEventListener('click',()=>{root.dataset.theme=root.dataset.theme==='light'?'dark':'light';localStorage.setItem('theme',root.dataset.theme);update()});
   const close=()=>{nav?.classList.remove('open');menu?.setAttribute('aria-expanded','false');menu?.setAttribute('aria-label','Open navigation menu');document.body.classList.remove('menu-open')};
   menu?.addEventListener('click',()=>{const open=!nav?.classList.contains('open');nav?.classList.toggle('open',open);menu.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-label',open?'Close navigation menu':'Open navigation menu');document.body.classList.toggle('menu-open',open)});nav?.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));addEventListener('keydown',e=>{if(e.key==='Escape')close()});
-  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('revealed');observer.unobserve(e.target)}}),{threshold:.08});document.querySelectorAll('[data-reveal]').forEach(el=>observer.observe(el))}
+  const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!reduceMotion){
+    const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('revealed');observer.unobserve(e.target)}}),{threshold:.08});document.querySelectorAll('[data-reveal]').forEach((el,i)=>{el.style.setProperty('--reveal-delay',`${Math.min(i%4,3)*70}ms`);observer.observe(el)});
+    const progress=document.querySelector('.scroll-progress'),aura=document.querySelector('.cursor-aura'),heroVisual=document.querySelector('[data-parallax]');
+    let mouseX=innerWidth/2,mouseY=innerHeight/2,auraX=mouseX,auraY=mouseY,ticking=false;
+    const render=()=>{const max=document.documentElement.scrollHeight-innerHeight;progress?.style.setProperty('--progress',`${max?scrollY/max*100:0}%`);auraX+=(mouseX-auraX)*.14;auraY+=(mouseY-auraY)*.14;aura?.style.setProperty('transform',`translate3d(${auraX}px,${auraY}px,0)`);if(heroVisual){const x=(mouseX/innerWidth-.5)*16,y=(mouseY/innerHeight-.5)*12;heroVisual.style.setProperty('--parallax-x',`${x}px`);heroVisual.style.setProperty('--parallax-y',`${y}px`)};ticking=false;requestAnimationFrame(render)};
+    addEventListener('pointermove',e=>{mouseX=e.clientX;mouseY=e.clientY;if(!ticking){ticking=true}});addEventListener('scroll',()=>{if(!ticking)ticking=true},{passive:true});requestAnimationFrame(render);
+    document.querySelectorAll('[data-magnetic]').forEach(el=>{el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect(),x=(e.clientX-r.left-r.width/2)*.16,y=(e.clientY-r.top-r.height/2)*.2;el.style.transform=`translate3d(${x}px,${y}px,0)`});el.addEventListener('pointerleave',()=>el.style.transform='')});
+    document.querySelectorAll('[data-tilt]').forEach(card=>{card.addEventListener('pointermove',e=>{const r=card.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height,rx=(.5-py)*3.5,ry=(px-.5)*4.5;card.style.transform=`perspective(1100px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-5px)`;card.style.setProperty('--glow-x',`${px*100}%`);card.style.setProperty('--glow-y',`${py*100}%`)});card.addEventListener('pointerleave',()=>card.style.transform='')});
+  }
 </script></body></html>
