@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'; import ButtonLink from '../components/ButtonLink.astro'; import SectionHeading from '../components/SectionHeading.astro'; import ProjectCard from '../components/ProjectCard.astro'; import Monogram from '../components/Monogram.astro'; import { projects } from '../data/projects';
-import '../styles/home-motion.css';
 const headline = ['I build useful apps,', 'browser extensions,', 'and automation tools.'];
 ---
 <BaseLayout>
@@ -28,7 +27,7 @@ const headline = ['I build useful apps,', 'browser extensions,', 'and automation
       </div>
     </div>
   </section>
-  <section class="section philosophy" data-philosophy-scene><div class="shell philosophy-sticky"><div class="philosophy-heading"><SectionHeading eyebrow="Building philosophy" title="Simple software takes thoughtful work."/><p class="philosophy-progress" aria-hidden="true"><span></span></p></div><div class="principles"><article data-philosophy-card="0"><span>01</span><h3>Useful first</h3><p>Start with a real problem and remove everything that does not help solve it.</p><small>PROBLEM → PURPOSE</small></article><article data-philosophy-card="1"><span>02</span><h3>Simple by design</h3><p>Powerful software should still feel understandable and easy to use.</p><small>COMPLEXITY → CLARITY</small></article><article data-philosophy-card="2"><span>03</span><h3>Built with care</h3><p>Performance, privacy, reliability, and visual polish are part of the product—not afterthoughts.</p><small>FUNCTION → FEELING</small></article></div></div></section>
+  <section class="section philosophy"><div class="shell"><SectionHeading eyebrow="What I build" title="Practical software for real workflows." text="From an early product idea to a focused release, I work across the parts that turn a useful concept into working software."/><div class="principles"><article data-reveal><span>01</span><h3>iOS apps</h3><p>Focused mobile products with clear flows, reliable behavior, and a polished native feel.</p></article><article data-reveal><span>02</span><h3>Browser extensions</h3><p>Lightweight tools that remove repetitive steps and make everyday browser work faster.</p></article><article data-reveal><span>03</span><h3>Automation tools</h3><p>Purpose-built systems that connect tasks, reduce manual work, and keep processes moving.</p></article></div></div></section>
   <section class="section"><div class="shell focus" data-reveal><div><p class="eyebrow">Current focus</p><h2>Preparing the next releases.</h2></div><p>Currently preparing Swoopix and several browser tools for their first public releases.</p></div></section>
   <section class="section"><div class="shell cta" data-reveal><p class="eyebrow">Start a conversation</p><h2>Have a useful problem worth solving?</h2><p>I’m always interested in thoughtful products, technical collaborations, and opportunities to build something meaningful.</p><ButtonLink href="/contact">Get in touch</ButtonLink></div></section>
 </BaseLayout>
