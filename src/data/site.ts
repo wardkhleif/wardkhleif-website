@@ -2,8 +2,8 @@ export const site = {
   name: 'Ward Khleif',
   shortName: 'WK',
   url: 'https://wardkhleif.com',
-  title: 'Ward Khleif — Independent Software Developer',
-  description: 'Independent software developer building useful iOS apps, browser extensions, automation tools, and digital products.',
+  title: 'Ward Khleif — Computer Science Student',
+  description: 'Personal website of Ward Khleif, a computer science student sharing software projects, experiments, and things he is learning.',
   // CONTACT PLACEHOLDERS — paste your real details between the quotes.
   email: '', // Example: 'hello@wardkhleif.com'
   linkedinUrl: '', // Example: 'https://www.linkedin.com/in/your-profile/'
