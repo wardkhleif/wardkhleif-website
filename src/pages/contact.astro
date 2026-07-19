@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ButtonLink from '../components/ButtonLink.astro';
+import Monogram from '../components/Monogram.astro';
 import { site } from '../data/site';
 
 const hasContact = Boolean(site.email || site.linkedinUrl || site.githubUrl);
@@ -37,7 +38,7 @@ const paths = [
         <div class="signal-ring ring-one"><i></i></div>
         <div class="signal-ring ring-two"><i></i></div>
         <div class="signal-ring ring-three"></div>
-        <div class="signal-core"><strong>WK</strong><span>OPEN TO<br/>GOOD IDEAS</span></div>
+        <div class="signal-core"><Monogram size="5rem" /><span>OPEN TO<br/>GOOD IDEAS</span></div>
         <div class="signal-label label-build"><i></i>Build</div>
         <div class="signal-label label-talk"><i></i>Talk</div>
         <div class="signal-label label-shape"><i></i>Shape</div>
@@ -66,7 +67,7 @@ const paths = [
 
   <section class="contact-status" id="contact-status">
     <div class="shell status-card" data-reveal>
-      <div class="status-orbit" aria-hidden="true"><i></i><i></i><span>WK</span></div>
+      <div class="status-orbit" aria-hidden="true"><i></i><i></i><span><Monogram size="3rem" /></span></div>
       <div>
         <p class="eyebrow">Contact status</p>
         {hasContact ? <><h2>The channel is open.</h2><p>Choose the contact method that works best and include whatever context will help start a useful conversation.</p><div class="status-actions">{site.email && <ButtonLink href={`mailto:${site.email}`}>Send an email</ButtonLink>}{site.linkedinUrl && <ButtonLink href={site.linkedinUrl} variant="secondary">LinkedIn</ButtonLink>}{site.githubUrl && <ButtonLink href={site.githubUrl} variant="secondary">GitHub</ButtonLink>}</div></> : <><h2>The public channel is being prepared.</h2><p>I’m setting up the right place for thoughtful messages. No broken form, fake address, or inbox that goes nowhere—in the meantime, the work is here to explore.</p><ButtonLink href="/projects">Explore the work</ButtonLink></>}

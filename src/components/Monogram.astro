@@ -1,0 +1,24 @@
+---
+interface Props {
+  size?: string;
+  label?: string;
+}
+
+const { size = '2rem', label } = Astro.props;
+---
+
+<svg
+  class="monogram"
+  viewBox="0 0 58 44"
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
+  style={`--monogram-size:${size}`}
+>
+  <path d="M6 7 16.5 37 27 17 37.5 37 41 7M34 29 52 7M35 29 52 37" />
+</svg>
+
+<style>
+  .monogram{display:block;width:var(--monogram-size);height:auto;overflow:visible;flex:none}
+  path{fill:none;stroke:currentColor;stroke-width:6.5;stroke-linecap:round;stroke-linejoin:round}
+</style>
