@@ -7,7 +7,7 @@ export const site = {
   // CONTACT — add the public email when ready.
   email: '', // Example: 'hello@wardkhleif.com'
   linkedinUrl: 'https://www.linkedin.com/in/ward-khleif-3793aa384/',
-  githubUrl: 'https://github.com/ward12345',
+  githubUrl: 'https://github.com/wardkhleif',
 } as const;
 
 export const navigation = [
