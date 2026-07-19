@@ -1,0 +1,4 @@
+---
+import ProjectLayout from '../../layouts/ProjectLayout.astro'; import { getProject } from '../../data/projects'; const project=getProject('swoopix');
+---
+<ProjectLayout project={project} problem="Photo libraries grow quietly until sorting them becomes an exhausting, high-stakes chore. Conventional grid views make it hard to decide quickly, and accidental deletion is a real concern." solution="Swoopix turns cleanup into a clear sequence of swipe decisions. Items queued for removal stay behind a deliberate Trash Review step, while on-device tools help surface duplicates, blurry shots, large files, and video opportunities."/>

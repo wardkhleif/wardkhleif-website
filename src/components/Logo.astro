@@ -1,0 +1,12 @@
+---
+interface Props { compact?: boolean; }
+const { compact = false } = Astro.props;
+---
+<span class="brand" aria-label="Ward Khleif">
+  <svg class="mark" viewBox="0 0 44 44" aria-hidden="true"><rect x="1" y="1" width="42" height="42" rx="12"/><path d="M10 13l5 18 7-13 7 13 5-18M24 22l10-9M25 23l10 8"/></svg>
+  {!compact && <span>Ward Khleif</span>}
+</span>
+<style>
+  .brand{display:inline-flex;align-items:center;gap:.7rem;font-weight:720;letter-spacing:-.02em;color:var(--text-primary)}
+  .mark{width:2.2rem;height:2.2rem;flex:none}.mark rect{fill:var(--text-primary)}.mark path{fill:none;stroke:var(--background);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+</style>

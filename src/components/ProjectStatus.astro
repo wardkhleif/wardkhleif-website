@@ -1,0 +1,6 @@
+---
+interface Props { status: string; }
+const { status } = Astro.props;
+---
+<span class="status"><i></i>{status}</span>
+<style>.status{display:inline-flex;align-items:center;gap:.45rem;border:1px solid var(--border);border-radius:99px;padding:.35rem .65rem;color:var(--text-secondary);font-size:.78rem}.status i{width:.42rem;height:.42rem;border-radius:50%;background:var(--accent-bright);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent-bright) 15%,transparent)}</style>

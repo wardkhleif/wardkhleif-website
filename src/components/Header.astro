@@ -1,0 +1,22 @@
+---
+import Logo from './Logo.astro'; import ThemeToggle from './ThemeToggle.astro'; import { navigation, site } from '../data/site';
+const path = Astro.url.pathname;
+const active = (href: string) => href === '/' ? path === '/' : path.startsWith(href);
+---
+<header>
+  <div class="shell nav-shell">
+    <a class="logo-link" href="/"><Logo /></a>
+    <nav id="primary-nav" aria-label="Primary navigation">
+      {navigation.map((item) => <a href={item.href} aria-current={active(item.href) ? 'page' : undefined}>{item.label}</a>)}
+    </nav>
+    <div class="actions">
+      {site.githubUrl && <a class="github" href={site.githubUrl} target="_blank" rel="noreferrer" aria-label="Ward Khleif on GitHub">GitHub</a>}
+      <ThemeToggle />
+      <button class="menu" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Open navigation menu"><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+<style>
+  header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--background) 82%,transparent);backdrop-filter:blur(18px);border-bottom:1px solid transparent}.nav-shell{height:4.6rem;display:flex;align-items:center;justify-content:space-between}.logo-link{position:relative;z-index:2;text-decoration:none}nav{display:flex;gap:.4rem}nav a{padding:.55rem .8rem;color:var(--text-secondary);text-decoration:none;font-size:.94rem;border-radius:.55rem}nav a:hover,nav a[aria-current="page"]{color:var(--text-primary);background:var(--surface)}.actions{display:flex;align-items:center;gap:.55rem}.github{font-size:.9rem}.menu{display:none;width:2.65rem;height:2.65rem;border:1px solid var(--border);border-radius:50%;background:var(--surface);padding:.7rem}.menu span{display:block;height:1.5px;background:var(--text-primary);margin:4px}
+  @media(max-width:700px){.brand :global(span){display:none}.menu{display:block}nav{display:none;position:absolute;inset:4.6rem 0 auto;padding:1rem 1.25rem 1.4rem;background:var(--background);border-bottom:1px solid var(--border);flex-direction:column}nav.open{display:flex}nav a{font-size:1.05rem;padding:.8rem}.github{display:none}}
+</style>

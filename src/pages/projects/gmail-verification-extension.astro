@@ -1,0 +1,4 @@
+---
+import ProjectLayout from '../../layouts/ProjectLayout.astro'; import { getProject } from '../../data/projects'; const project=getProject('gmail-verification-extension');
+---
+<ProjectLayout project={project} problem="Verification codes often arrive while attention is already split between tabs, apps, and a time-sensitive sign-in flow. Finding the right recent message introduces avoidable friction." solution="The extension uses user-authorized OAuth access and focused Gmail permissions to search relevant recent messages, identify likely one-time codes, and present them in a faster workflow. It does not collect Gmail credentials, and no Google approval or verification is claimed."/>
