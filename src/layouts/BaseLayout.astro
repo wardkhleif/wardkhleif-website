@@ -1,36 +1,238 @@
 ---
-import Header from '../components/Header.astro'; import Footer from '../components/Footer.astro'; import { site } from '../data/site'; import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+import '../styles/global.css';
+
 interface Props { title?: string; description?: string; image?: string; }
 const { title = site.title, description = site.description, image = '/og-image.png' } = Astro.props;
-const canonical = new URL(Astro.url.pathname, site.url); const imageUrl = new URL(image, site.url);
+
+const canonical = new URL(Astro.url.pathname, site.url);
+const imageUrl = new URL(image, site.url);
 const sameAs = [site.githubUrl, site.linkedinUrl].filter(Boolean);
-const schemas = [{ '@context':'https://schema.org','@type':'Person',name:site.name,url:site.url,...(sameAs.length?{sameAs}:{}) },{ '@context':'https://schema.org','@type':'WebSite',name:site.name,url:site.url,description:site.description }];
+const schemas = [
+  { '@context': 'https://schema.org', '@type': 'Person', name: site.name, url: site.url, ...(sameAs.length ? { sameAs } : {}) },
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: site.name, url: site.url, description: site.description },
+];
 ---
-<!doctype html><html lang="en"><head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width" />
-  <title>{title}</title><meta name="description" content={description} /><link rel="canonical" href={canonical} />
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <meta property="og:type" content="website" /><meta property="og:site_name" content={site.name} /><meta property="og:title" content={title} /><meta property="og:description" content={description} /><meta property="og:url" content={canonical} /><meta property="og:image" content={imageUrl} /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" />
-  <meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content={title} /><meta name="twitter:description" content={description} /><meta name="twitter:image" content={imageUrl} />
-  <meta name="theme-color" content="#080B10" />
-  <script is:inline>try{const t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;else if(matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.dataset.theme='dark'}catch(e){}</script>
+
+  <!-- Cross-page morphing so the whole site navigates like one app. -->
+  <ClientRouter />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap"
+  />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content={site.name} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={imageUrl} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={imageUrl} />
+  <meta name="theme-color" content="#F7F6F3" />
+
+  <script is:inline>
+    try {
+      const stored = localStorage.getItem('theme');
+      if (stored) document.documentElement.dataset.theme = stored;
+      else if (matchMedia('(prefers-color-scheme:dark)').matches) document.documentElement.dataset.theme = 'dark';
+    } catch (e) {}
+    // Opt in to the hidden-until-revealed states only when we can undo them.
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('has-motion');
+    }
+  </script>
   <script is:inline type="application/ld+json" set:html={JSON.stringify(schemas)} />
-</head><body><div class="scroll-progress" aria-hidden="true"></div><div class="cursor-aura" aria-hidden="true"></div><a class="skip-link" href="#main">Skip to content</a><Header /><main id="main"><slot /></main><Footer />
-<script is:inline>
-  const root=document.documentElement,toggle=document.querySelector('.theme-toggle'),menu=document.querySelector('.menu'),nav=document.querySelector('#primary-nav');
-  const update=()=>{const dark=root.dataset.theme==='dark';toggle?.setAttribute('aria-label',`Switch to ${dark?'light':'dark'} theme`);document.querySelector('meta[name="theme-color"]')?.setAttribute('content',dark?'#10110F':'#D9D3C3')};
-  update();toggle?.addEventListener('click',()=>{root.dataset.theme=root.dataset.theme==='dark'?'light':'dark';localStorage.setItem('theme',root.dataset.theme);update()});
-  const close=()=>{nav?.classList.remove('open');menu?.setAttribute('aria-expanded','false');menu?.setAttribute('aria-label','Open navigation menu');document.body.classList.remove('menu-open')};
-  menu?.addEventListener('click',()=>{const open=!nav?.classList.contains('open');nav?.classList.toggle('open',open);menu.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-label',open?'Close navigation menu':'Open navigation menu');document.body.classList.toggle('menu-open',open)});nav?.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));addEventListener('keydown',e=>{if(e.key==='Escape')close()});
-  const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(!reduceMotion){
-    const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('revealed');observer.unobserve(e.target)}}),{threshold:.08});document.querySelectorAll('[data-reveal]').forEach((el,i)=>{el.style.setProperty('--reveal-delay',`${Math.min(i%4,3)*70}ms`);observer.observe(el)});
-    const progress=document.querySelector('.scroll-progress'),aura=document.querySelector('.cursor-aura'),heroVisual=document.querySelector('[data-parallax]'),hero=document.querySelector('.hero'),heroGrid=document.querySelector('.hero-grid'),scene=document.querySelector('[data-scroll-scene]'),sceneStage=document.querySelector('.story-stage'),storySteps=[...document.querySelectorAll('[data-story-step]')],stageCards=[...document.querySelectorAll('.stage-card')];
-    let mouseX=innerWidth/2,mouseY=innerHeight/2,auraX=mouseX,auraY=mouseY,ticking=false;
-    const clamp=(value,min=0,max=1)=>Math.min(max,Math.max(min,value));
-    const render=()=>{const max=document.documentElement.scrollHeight-innerHeight;progress?.style.setProperty('--progress',`${max?scrollY/max*100:0}%`);auraX+=(mouseX-auraX)*.14;auraY+=(mouseY-auraY)*.14;aura?.style.setProperty('transform',`translate3d(${auraX}px,${auraY}px,0)`);if(heroVisual){const x=(mouseX/innerWidth-.5)*16,y=(mouseY/innerHeight-.5)*12;heroVisual.style.setProperty('--parallax-x',`${x}px`);heroVisual.style.setProperty('--parallax-y',`${y}px`)}if(hero&&heroGrid&&innerWidth>800){const hp=clamp(scrollY/(hero.offsetHeight*.95)),blurP=clamp((hp-.58)/.42);heroGrid.style.setProperty('--hero-y',`${hp*-52}px`);heroGrid.style.setProperty('--hero-scale',`${1-hp*.05}`);heroGrid.style.setProperty('--hero-opacity',`${1-hp*.48}`);heroGrid.style.setProperty('--hero-blur',`${blurP*2.5}px`);hero.style.setProperty('--hero-progress',`${hp}`)}if(scene&&sceneStage&&innerWidth>800){const rect=scene.getBoundingClientRect(),range=scene.offsetHeight-innerHeight,sp=clamp(-rect.top/range);sceneStage.style.setProperty('--scene-progress',`${sp}`);sceneStage.style.setProperty('--scene-scale',`${.82+sp*.18}`);sceneStage.style.setProperty('--scene-rotate',`${-8+sp*8}deg`);sceneStage.style.setProperty('--scene-opacity',`${.45+sp*.55}`);storySteps.forEach((step,i)=>{const local=clamp((sp-i*.27)/.23);step.style.setProperty('--step-opacity',`${.28+local*.72}`);step.style.setProperty('--step-x',`${(1-local)*-10}px`)});stageCards.forEach((card,i)=>{const local=clamp((sp-i*.2)/.24),positions=[[-24,-28,-5],[26,-4,4],[-12,25,-3]][i];card.style.setProperty('--card-opacity',`${local}`);card.style.setProperty('--card-x',`${positions[0]*(1-local)}px`);card.style.setProperty('--card-y',`${positions[1]*(1-local)}px`);card.style.setProperty('--card-r',`${positions[2]}deg`)})};ticking=false;requestAnimationFrame(render)};
-    addEventListener('pointermove',e=>{mouseX=e.clientX;mouseY=e.clientY;if(!ticking){ticking=true}});addEventListener('scroll',()=>{if(!ticking)ticking=true},{passive:true});requestAnimationFrame(render);
-    document.querySelectorAll('[data-magnetic]').forEach(el=>{el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect(),x=(e.clientX-r.left-r.width/2)*.16,y=(e.clientY-r.top-r.height/2)*.2;el.style.transform=`translate3d(${x}px,${y}px,0)`});el.addEventListener('pointerleave',()=>el.style.transform='')});
-    document.querySelectorAll('[data-tilt]').forEach(card=>{card.addEventListener('pointermove',e=>{const r=card.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height,rx=(.5-py)*3.5,ry=(px-.5)*4.5;card.style.transform=`perspective(1100px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-5px)`;card.style.setProperty('--glow-x',`${px*100}%`);card.style.setProperty('--glow-y',`${py*100}%`)});card.addEventListener('pointerleave',()=>card.style.transform='')});
-  }
-</script></body></html>
+</head>
+
+<body>
+  <div class="scroll-progress" aria-hidden="true"></div>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <Header />
+  <main id="main"><slot /></main>
+  <Footer />
+
+  <script is:inline>
+    /* Guarded so global listeners bind exactly once, even though this inline
+       script re-executes on every view-transition navigation. Per-page work
+       (element bindings, observers) runs in setupPage() on `astro:page-load`,
+       which fires on the initial load and after each navigation. */
+    if (!window.__wkInit) {
+      window.__wkInit = true;
+
+      const root = document.documentElement;
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const clamp = (v, min = 0, max = 1) => Math.min(max, Math.max(min, v));
+
+      // Per-page state, refreshed by setupPage() on each navigation.
+      const refs = {
+        progress: null, header: null, nav: null,
+        parallax: [], timelines: [], fades: [], observer: null,
+      };
+      let queued = false;
+      let lastY = scrollY;
+
+      const closeNav = () => {
+        refs.nav?.classList.remove('open');
+        const menu = document.querySelector('.menu');
+        menu?.setAttribute('aria-expanded', 'false');
+        menu?.setAttribute('aria-label', 'Open navigation menu');
+        document.body.classList.remove('menu-open');
+      };
+
+      const render = () => {
+        queued = false;
+        const vh = innerHeight;
+        const max = root.scrollHeight - vh;
+        refs.progress?.style.setProperty('--progress', String(max > 0 ? clamp(scrollY / max) : 0));
+
+        // Header retreats when scrolling down, returns the moment you scroll up.
+        if (refs.header) {
+          const delta = scrollY - lastY;
+          if (scrollY > 140 && delta > 4) refs.header.classList.add('is-hidden');
+          else if (delta < -4 || scrollY < 140) refs.header.classList.remove('is-hidden');
+          refs.header.classList.toggle('is-stuck', scrollY > 20);
+        }
+        lastY = scrollY;
+
+        // The hero lifts and dissolves as it leaves rather than just sliding off.
+        for (const el of refs.fades) {
+          const p = clamp(scrollY / (el.offsetHeight || vh));
+          el.style.setProperty('--fade-opacity', String(1 - p * 0.85));
+          el.style.setProperty('--fade-y', `${p * -60}px`);
+        }
+
+        for (const el of refs.parallax) {
+          const rect = el.getBoundingClientRect();
+          if (rect.bottom < -200 || rect.top > vh + 200) continue;
+          const centred = (rect.top + rect.height / 2 - vh / 2) / vh;
+          const strength = Number(el.dataset.parallax) || 28;
+          el.style.setProperty('--parallax-y', `${(-centred * strength).toFixed(2)}px`);
+        }
+
+        for (const el of refs.timelines) {
+          const rect = el.getBoundingClientRect();
+          const drawn = clamp((vh * 0.75 - rect.top) / (rect.height * 0.85));
+          el.style.setProperty('--timeline-progress', drawn.toFixed(3));
+        }
+      };
+
+      const queue = () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(render);
+      };
+
+      // Global listeners — bound once, they read whatever the current page put
+      // in `refs`, so they survive navigations without stacking up.
+      addEventListener('scroll', queue, { passive: true });
+      addEventListener('resize', queue);
+      addEventListener('keydown', (e) => { if (e.key === 'Escape') closeNav(); });
+
+      const setupPage = () => {
+        const themeColor = document.querySelector('meta[name="theme-color"]');
+
+        /* ---- Theme ----------------------------------------------------- */
+        const toggle = document.querySelector('.theme-toggle');
+        const syncTheme = () => {
+          const dark = root.dataset.theme === 'dark';
+          toggle?.setAttribute('aria-label', `Switch to ${dark ? 'light' : 'dark'} theme`);
+          themeColor?.setAttribute('content', dark ? '#0C0D0F' : '#F7F6F3');
+        };
+        syncTheme();
+        toggle?.addEventListener('click', () => {
+          root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+          try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+          syncTheme();
+        });
+
+        /* ---- Mobile navigation ----------------------------------------- */
+        const menu = document.querySelector('.menu');
+        const nav = document.querySelector('#primary-nav');
+        refs.nav = nav;
+        menu?.addEventListener('click', () => {
+          const open = !nav?.classList.contains('open');
+          nav?.classList.toggle('open', open);
+          menu.setAttribute('aria-expanded', String(open));
+          menu.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+          document.body.classList.toggle('menu-open', open);
+        });
+        nav?.querySelectorAll('a').forEach((a) => a.addEventListener('click', closeNav));
+
+        /* ---- Scroll-linked refs ---------------------------------------- */
+        refs.progress = document.querySelector('.scroll-progress');
+        refs.header = document.querySelector('header');
+        refs.parallax = [...document.querySelectorAll('[data-parallax]')];
+        refs.timelines = [...document.querySelectorAll('[data-timeline]')];
+        refs.fades = [...document.querySelectorAll('[data-scroll-fade]')];
+        lastY = scrollY;
+
+        if (reduce) { render(); return; }
+
+        /* ---- Reveals ---------------------------------------------------
+           A fresh observer per page; the previous one is discarded with its
+           old (now removed) targets. */
+        refs.observer?.disconnect();
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              entry.target.classList.add('is-revealed');
+              observer.unobserve(entry.target);
+            }
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
+        );
+        refs.observer = observer;
+
+        document.querySelectorAll('[data-reveal]').forEach((el, i) => {
+          const delay = Number(el.dataset.revealDelay ?? Math.min(i % 4, 3) * 80);
+          el.style.setProperty('--reveal-delay', `${delay}ms`);
+          observer.observe(el);
+        });
+
+        document.querySelectorAll('[data-lines]').forEach((el) => {
+          el.querySelectorAll('.line > span').forEach((span, i) => {
+            span.style.setProperty('--line-delay', `${i * 90}ms`);
+          });
+          observer.observe(el);
+        });
+
+        document.querySelectorAll('[data-stagger]').forEach((el) => {
+          [...el.children].forEach((child, i) => child.style.setProperty('--i', String(i)));
+          observer.observe(el);
+        });
+
+        // A clip-path'd element has a zero-area intersection rect, so it can
+        // never trigger its own reveal — watch the unclipped parent instead.
+        document.querySelectorAll('[data-wipe]').forEach((el) => observer.observe(el.parentElement || el));
+        document.querySelectorAll('.draw-rule').forEach((el) => observer.observe(el));
+
+        render();
+      };
+
+      document.addEventListener('astro:page-load', setupPage);
+    }
+  </script>
+</body>
+</html>

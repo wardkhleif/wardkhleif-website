@@ -1,42 +1,277 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Monogram from '../components/Monogram.astro';
 import { site } from '../data/site';
 
-const contacts = [
-  { label: 'Email', value: site.email, href: site.email ? `mailto:${site.email}` : '' },
-  { label: 'LinkedIn', value: site.linkedinUrl, href: site.linkedinUrl },
-  { label: 'GitHub', value: site.githubUrl, href: site.githubUrl },
-];
+const channels = [
+  { label: 'LinkedIn', handle: 'in/ward-khleif', href: site.linkedinUrl },
+  { label: 'GitHub', handle: '@wardkhleif', href: site.githubUrl },
+].filter((c) => c.href);
 ---
 
-<BaseLayout title="Contact — Ward Khleif" description="Email Ward Khleif or connect on LinkedIn and GitHub.">
-  <section class="contact-page">
-    <div class="shell contact-layout">
-      <div class="contact-intro">
-        <p class="eyebrow">Contact</p>
-        <h1>Let’s talk.</h1>
-        <p>Find me online, ask about a project, or just say hello.</p>
+<BaseLayout
+  title="Contact — Ward Khleif"
+  description="Email Ward Khleif at w4rdkh@gmail.com, or connect on LinkedIn and GitHub."
+>
+  <section class="section contact">
+    <div class="shell">
+      <header class="head" data-lines>
+        <span class="eyebrow line"><span>Contact</span></span>
+        <h1 class="line"><span>Let's build</span></h1>
+        <h1 class="line"><span>something.</span></h1>
+      </header>
+
+      <p class="lede" data-reveal data-reveal-delay="200">
+        Have an idea, a question, or just want to say hello? The fastest way to
+        reach me is email — I read everything.
+      </p>
+
+      <!-- Email is the primary action: large, copyable, and a real mailto. -->
+      <div class="email-block" data-reveal data-reveal-delay="320">
+        <a class="email" href={`mailto:${site.email}`}>{site.email}</a>
+        <button
+          type="button"
+          class="copy"
+          data-copy={site.email}
+          aria-label="Copy email address"
+        >
+          <span class="copy-label">Copy</span>
+        </button>
       </div>
 
-      <div class="contact-panel">
-        <div class="panel-mark" aria-hidden="true"><Monogram size="4.8rem" /></div>
-        <div class="contact-list">
-          {contacts.map((contact, index) => contact.href ? (
-            <a href={contact.href} target={contact.label === 'Email' ? undefined : '_blank'} rel={contact.label === 'Email' ? undefined : 'noreferrer'}>
-              <span>0{index + 1}</span><strong>{contact.label}</strong><small>{contact.value}</small><i aria-hidden="true">↗</i>
+      {channels.length > 0 && (
+        <div class="channels" data-stagger style="--stagger-step:90ms">
+          {channels.map((c) => (
+            <a class="channel" href={c.href} target="_blank" rel="noreferrer">
+              <span class="channel-label">{c.label}</span>
+              <span class="channel-handle">{c.handle}</span>
+              <span class="channel-arrow" aria-hidden="true">↗</span>
             </a>
-          ) : (
-            <div class="contact-link pending">
-              <span>0{index + 1}</span><strong>{contact.label}</strong><small>Link coming soon</small><i aria-hidden="true">—</i>
-            </div>
           ))}
         </div>
-      </div>
+      )}
+
+      <p class="availability" data-reveal data-reveal-delay="120">
+        <span class="dot" aria-hidden="true"></span>
+        Open to internships and interesting projects.
+      </p>
     </div>
   </section>
 </BaseLayout>
 
+<script>
+  // Progressive enhancement: without JS the address is still a visible mailto
+  // link, so this only ever adds convenience — never a dependency.
+  document.querySelectorAll<HTMLButtonElement>('.copy[data-copy]').forEach((btn) => {
+    const label = btn.querySelector('.copy-label');
+    const original = label?.textContent ?? 'Copy';
+    let resetTimer: number | undefined;
+
+    btn.addEventListener('click', async () => {
+      const value = btn.dataset.copy ?? '';
+      try {
+        await navigator.clipboard.writeText(value);
+      } catch {
+        // Older browsers / denied permission — select-and-copy fallback.
+        const ta = document.createElement('textarea');
+        ta.value = value;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch {}
+        ta.remove();
+      }
+      if (label) label.textContent = 'Copied';
+      btn.classList.add('is-copied');
+      clearTimeout(resetTimer);
+      resetTimer = window.setTimeout(() => {
+        if (label) label.textContent = original;
+        btn.classList.remove('is-copied');
+      }, 1800);
+    });
+  });
+</script>
+
 <style>
-  .contact-page{min-height:calc(100svh - 4.6rem);display:grid;align-items:center;padding:clamp(4rem,10vw,8rem) 0;position:relative;overflow:hidden}.contact-page:before{content:"";position:absolute;width:38rem;height:38rem;right:-12rem;top:-16rem;border-radius:50%;background:var(--accent);filter:blur(150px);opacity:.1;pointer-events:none}.contact-layout{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(3rem,9vw,9rem);align-items:center}.contact-intro h1{font-size:clamp(4.8rem,11vw,10rem);line-height:.84;margin:.7rem 0 2rem;letter-spacing:-.07em}.contact-intro>p:last-child{max-width:30rem;color:var(--text-secondary);font-size:clamp(1.05rem,2vw,1.25rem);line-height:1.7}.contact-panel{border:1px solid var(--border);border-radius:1.2rem;background:color-mix(in srgb,var(--surface) 82%,transparent);box-shadow:0 30px 90px rgba(0,0,0,.14);overflow:hidden}.panel-mark{height:14rem;display:grid;place-items:center;color:var(--background);background:var(--text-primary);position:relative}.panel-mark:after{content:"";position:absolute;inset:-100%;background:linear-gradient(110deg,transparent 43%,rgba(255,255,255,.18),transparent 57%);animation:sheen 6s ease-in-out infinite}.contact-list{display:grid}.contact-list>a,.contact-link{display:grid;grid-template-columns:2.5rem 1fr minmax(7rem,1.2fr) 1.5rem;gap:1rem;align-items:center;min-height:5.25rem;padding:1rem 1.4rem;border-top:1px solid var(--border);color:var(--text-primary);text-decoration:none;transition:background .25s,padding .25s}.contact-list>a:hover{background:var(--surface-elevated);padding-inline:1.7rem}.contact-list span{color:var(--accent-bright);font:.7rem monospace}.contact-list strong{font-size:1.05rem}.contact-list small{color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.contact-list i{font-style:normal;color:var(--accent-bright)}.pending{opacity:.68}.pending i{color:var(--text-secondary)}@keyframes sheen{0%,55%{transform:translateX(-70%) rotate(12deg)}85%,100%{transform:translateX(70%) rotate(12deg)}}@media(max-width:760px){.contact-layout{grid-template-columns:1fr;gap:2.5rem}.contact-intro h1{font-size:clamp(4rem,22vw,6.5rem)}.panel-mark{height:11rem}.contact-list>a,.contact-link{grid-template-columns:2rem 1fr 1.5rem}.contact-list small{grid-column:2/4;grid-row:2}.contact-list i{grid-column:3;grid-row:1}}
+  .contact {
+    min-height: calc(100svh - 4.25rem);
+    display: grid;
+    align-content: center;
+  }
+
+  .head {
+    margin-bottom: 1.5rem;
+  }
+
+  .head .eyebrow {
+    margin-bottom: 1rem;
+  }
+
+  .head h1 {
+    margin: 0;
+    line-height: 0.92;
+  }
+
+  .lede {
+    max-width: 34rem;
+    margin: 0 0 clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  /* Email block — the address is the headline act. */
+  .email-block {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+    padding-bottom: clamp(2rem, 4vw, 2.75rem);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .email {
+    font-size: clamp(1.75rem, 5.5vw, 3.75rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    text-decoration: none;
+    color: var(--text-primary);
+    position: relative;
+    transition: color 0.3s var(--ease-out);
+  }
+
+  /* Underline that grows from the left on hover. */
+  .email::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0.05em;
+    width: 100%;
+    height: 2px;
+    background: var(--accent-bright);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    transition: transform 0.45s var(--ease-out);
+  }
+
+  .email:hover,
+  .email:focus-visible {
+    color: var(--accent-bright);
+  }
+
+  .email:hover::after,
+  .email:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  .copy {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 99px;
+    background: transparent;
+    color: var(--text-secondary);
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: border-color 0.25s var(--ease-out), color 0.25s var(--ease-out),
+      background-color 0.25s var(--ease-out);
+  }
+
+  .copy::before {
+    content: "";
+    width: 0.9rem;
+    height: 0.9rem;
+    background: currentColor;
+    -webkit-mask: var(--copy-icon) center / contain no-repeat;
+    mask: var(--copy-icon) center / contain no-repeat;
+    --copy-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='13' height='13' rx='2'/%3E%3Cpath d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'/%3E%3C/svg%3E");
+  }
+
+  .copy:hover {
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+  }
+
+  .copy.is-copied {
+    border-color: var(--accent-bright);
+    color: var(--accent-bright);
+  }
+
+  .copy.is-copied::before {
+    --copy-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  }
+
+  /* Secondary channels. */
+  .channels {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    margin-top: 1px;
+    background: var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .channel {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: clamp(1.5rem, 3vw, 2rem) 0.25rem;
+    background: var(--background);
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: padding-left 0.3s var(--ease-out);
+  }
+
+  .channel:hover {
+    padding-left: 1rem;
+  }
+
+  .channel-label {
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+
+  .channel-handle {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  .channel-arrow {
+    margin-left: auto;
+    color: var(--text-tertiary);
+    transition: transform 0.3s var(--ease-out), color 0.3s var(--ease-out);
+  }
+
+  .channel:hover .channel-arrow {
+    transform: translate(3px, -3px);
+    color: var(--accent-bright);
+  }
+
+  .availability {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: clamp(2rem, 4vw, 2.75rem) 0 0;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  .availability .dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: #23c7b8;
+    box-shadow: 0 0 0 4px color-mix(in srgb, #23c7b8 18%, transparent);
+  }
+
+  @media (max-width: 560px) {
+    .channels {
+      grid-template-columns: 1fr;
+    }
+
+    .channel {
+      padding-inline: 0.25rem;
+    }
+  }
 </style>

@@ -2,5 +2,49 @@
 interface Props { href: string; variant?: 'primary'|'secondary'; }
 const { href, variant = 'primary' } = Astro.props;
 ---
-<a href={href} class:list={['button', variant]} data-magnetic><span class="label"><slot /></span><span class="arrow" aria-hidden="true">↗</span></a>
-<style>.button{display:inline-flex;align-items:center;gap:.6rem;padding:.78rem 1.05rem;border-radius:.7rem;text-decoration:none;font-weight:650;border:1px solid var(--border);transition:box-shadow .25s ease,background-color .25s,border-color .25s;will-change:transform}.primary{color:#031013;background:var(--accent-bright);border-color:transparent;box-shadow:0 0 0 0 color-mix(in srgb,var(--accent-bright) 35%,transparent)}.secondary{color:var(--text-primary);background:var(--surface)}.button:hover{box-shadow:0 12px 35px rgba(0,0,0,.2),0 0 0 5px color-mix(in srgb,var(--accent-bright) 9%,transparent)}.arrow{transition:transform .25s}.button:hover .arrow{transform:translate(3px,-3px)}.label,.arrow{pointer-events:none}</style>
+<a href={href} class:list={['button', variant]}><span class="label"><slot /></span><span class="arrow" aria-hidden="true">→</span></a>
+
+<style>
+  .button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1.15rem;
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .primary {
+    background: var(--text-primary);
+    color: var(--background);
+  }
+
+  .primary:hover {
+    background: color-mix(in srgb, var(--text-primary) 85%, var(--background));
+  }
+
+  .secondary {
+    border-color: var(--border-strong);
+    color: var(--text-primary);
+  }
+
+  .secondary:hover {
+    border-color: var(--text-primary);
+  }
+
+  .arrow {
+    transition: transform 0.35s var(--ease-out);
+  }
+
+  .button:hover .arrow {
+    transform: translateX(4px);
+  }
+
+  .label,
+  .arrow {
+    pointer-events: none;
+  }
+</style>

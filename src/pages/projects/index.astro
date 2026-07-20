@@ -1,5 +1,74 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro'; import ProjectCard from '../../components/ProjectCard.astro'; import { projects } from '../../data/projects';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectRow from '../../components/ProjectRow.astro';
+import { projects } from '../../data/projects';
+
+// The "more" placeholder was filler — the count speaks for itself.
+const shown = projects.filter((project) => project.slug !== 'more');
 ---
-<BaseLayout title="Projects — Ward Khleif" description="Software projects and experiments by computer science student Ward Khleif."><section class="page-hero"><div class="shell"><p class="eyebrow">Projects</p><h1>Things I’ve built—and things I’m still figuring out.</h1><p>A mix of apps, browser extensions, and experiments. Some are polished, some are still in progress, and all of them taught me something.</p></div></section><section><div class="shell projects">{projects.map(project=><ProjectCard project={project}/>)}</div></section></BaseLayout>
-<style>.page-hero{padding:7rem 0 5rem}.page-hero h1{font-size:clamp(3rem,8vw,6rem);max-width:13ch}.page-hero p:last-child{max-width:44rem;color:var(--text-secondary);font-size:1.15rem}.projects{display:grid;gap:1.25rem}.projects :global(article:nth-child(3)),.projects :global(article:nth-child(4)){grid-template-columns:.75fr 1.25fr}@media(max-width:720px){.projects :global(article:nth-child(3)),.projects :global(article:nth-child(4)){grid-template-columns:1fr}}</style>
+
+<BaseLayout
+  title="Projects — Ward Khleif"
+  description="Software projects and experiments by computer science student Ward Khleif."
+>
+  <section class="section projects-hero">
+    <div class="shell">
+      <header class="head" data-lines>
+        <span class="eyebrow line"><span>Projects · {shown.length}</span></span>
+        <h1 class="line"><span>What I've built,</span></h1>
+        <h1 class="line"><span>and what I'm</span></h1>
+        <h1 class="line"><span>still figuring out.</span></h1>
+      </header>
+
+      <p class="lede" data-reveal data-reveal-delay="260">
+        Apps, browser extensions, and automation. Some shipped, some in
+        progress — each one taught me something I couldn't have learned by
+        reading about it.
+      </p>
+    </div>
+  </section>
+
+  <section class="section list">
+    <div class="shell">
+      <div class="draw-rule"></div>
+      <div class="rows">
+        {shown.map((project, index) => <ProjectRow project={project} index={index} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .projects-hero {
+    padding-bottom: clamp(2rem, 5vw, 3rem);
+  }
+
+  .head {
+    margin-bottom: 1.75rem;
+  }
+
+  .head .eyebrow {
+    margin-bottom: 1rem;
+  }
+
+  .head h1 {
+    margin: 0;
+    line-height: 0.94;
+  }
+
+  .lede {
+    max-width: 40rem;
+  }
+
+  .list {
+    padding-top: 0;
+  }
+
+  .draw-rule {
+    margin-bottom: clamp(1rem, 3vw, 2rem);
+  }
+
+  .rows {
+    border-bottom: 1px solid var(--border);
+  }
+</style>

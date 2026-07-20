@@ -9,5 +9,196 @@ const { type } = Astro.props;
   {type === 'more' && <div class="plus">+</div>}
 </div>
 <style>
-  .preview{min-height:18rem;border-radius:1rem;position:relative;display:grid;place-items:center;overflow:hidden;background:radial-gradient(circle at 70% 20%,color-mix(in srgb,var(--card-accent) 24%,transparent),transparent 45%),var(--surface-elevated);border:1px solid var(--border)}.preview:before{content:"";position:absolute;inset:-50%;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:30px 30px;mask-image:radial-gradient(circle,black,transparent 64%);opacity:.28;animation:grid-drift 18s linear infinite}.phone{width:9rem;height:15rem;border-radius:1.5rem;padding:.8rem;background:#10151d;border:5px solid #28313c;box-shadow:0 25px 45px #0008;transform:rotate(4deg);z-index:1;animation:device-float 5s ease-in-out infinite}.notch{display:block;width:2.8rem;height:.35rem;margin:0 auto .7rem;border-radius:2rem;background:#313b46}.photo{height:8.8rem;border-radius:.7rem;background:linear-gradient(145deg,#175f67,#52d6bd);position:relative;overflow:hidden}.photo i{position:absolute;width:4rem;height:4rem;border-radius:50%;background:#a7efe4;right:-.8rem;top:1rem}.photo b{position:absolute;bottom:0;border-style:solid;border-width:0 0 4.5rem 7.5rem;border-color:transparent transparent #13454f transparent}.decisions{display:flex;justify-content:space-around;margin-top:.7rem}.decisions span{display:grid;place-items:center;width:1.8rem;height:1.8rem;border-radius:50%;background:#222b35;color:white}.float-tag{position:absolute;right:10%;bottom:12%;z-index:2;padding:.55rem .75rem;border:1px solid var(--border);background:color-mix(in srgb,var(--surface) 85%,transparent);backdrop-filter:blur(10px);border-radius:.6rem;font-size:.75rem;color:var(--text-secondary);animation:tag-float 4.5s ease-in-out infinite .7s}.browser{width:min(80%,19rem);padding:1rem 1.2rem 1.3rem;border-radius:.8rem;background:var(--surface);border:1px solid var(--border);z-index:1;box-shadow:0 22px 45px #0005;animation:device-float 5.5s ease-in-out infinite}.browser-top{display:flex;gap:.3rem;border-bottom:1px solid var(--border);padding-bottom:.8rem}.browser-top i{width:.45rem;height:.45rem;background:var(--text-secondary);opacity:.5;border-radius:50%}.browser p{color:var(--text-secondary);font-size:.75rem;margin:1.2rem 0 .35rem}.browser strong{font-size:2rem;letter-spacing:.14em}.browser>span{display:block;color:var(--text-secondary);font-size:.7rem;margin-top:.55rem}.nodes{display:flex;align-items:center;gap:.5rem;position:relative;z-index:1}.nodes span{padding:.75rem;border:1px solid var(--border);background:var(--surface);border-radius:.6rem;font-size:.75rem;animation:node-pulse 3s ease-in-out infinite}.nodes span:nth-of-type(2){animation-delay:.4s}.nodes span:nth-of-type(3){animation-delay:.8s}.nodes i{font-style:normal;color:var(--card-accent)}.plus{font-size:5rem;color:var(--card-accent);font-weight:200;position:relative;animation:plus-spin 12s linear infinite}.more{min-height:12rem}@keyframes grid-drift{to{transform:translate3d(30px,30px,0)}}@keyframes device-float{50%{transform:translateY(-8px) rotate(2deg)}}@keyframes tag-float{50%{transform:translateY(7px)}}@keyframes node-pulse{50%{border-color:color-mix(in srgb,var(--card-accent) 65%,var(--border));box-shadow:0 0 24px color-mix(in srgb,var(--card-accent) 16%,transparent)}}@keyframes plus-spin{to{transform:rotate(1turn)}}
+  /* Deliberately static. These sit next to scroll-driven motion, and a
+     device that bobs forever competes with the content instead of framing it.
+     The only movement is the parent row's parallax and hover scale. */
+
+  .preview {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 20rem;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 0.9rem;
+    background:
+      radial-gradient(circle at 72% 18%, color-mix(in srgb, var(--card-accent) 14%, transparent), transparent 52%),
+      var(--surface-elevated);
+  }
+
+  .preview::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: radial-gradient(circle at 50% 50%, black, transparent 72%);
+    opacity: 0.5;
+  }
+
+  /* -- Phone (Swoopix) -- */
+  .phone {
+    position: relative;
+    z-index: 1;
+    width: 9.5rem;
+    height: 15.5rem;
+    padding: 0.8rem;
+    border: 5px solid color-mix(in srgb, var(--text-primary) 82%, transparent);
+    border-radius: 1.6rem;
+    background: #10151d;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .notch {
+    display: block;
+    width: 2.8rem;
+    height: 0.3rem;
+    margin: 0 auto 0.7rem;
+    border-radius: 2rem;
+    background: #313b46;
+  }
+
+  .photo {
+    position: relative;
+    height: 9.1rem;
+    overflow: hidden;
+    border-radius: 0.6rem;
+    background: linear-gradient(150deg, color-mix(in srgb, var(--card-accent) 55%, #0d3b40), var(--card-accent));
+  }
+
+  .photo i {
+    position: absolute;
+    right: -0.8rem;
+    top: 1rem;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+  }
+
+  .photo b {
+    position: absolute;
+    bottom: 0;
+    border-style: solid;
+    border-width: 0 0 4.5rem 7.5rem;
+    border-color: transparent transparent rgba(0, 0, 0, 0.28) transparent;
+  }
+
+  .decisions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 0.85rem;
+  }
+
+  .decisions span {
+    display: grid;
+    place-items: center;
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+    background: #222b35;
+    color: #fff;
+    font-size: 0.85rem;
+  }
+
+  .float-tag {
+    position: absolute;
+    right: 9%;
+    bottom: 11%;
+    z-index: 2;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
+    backdrop-filter: blur(10px);
+    color: var(--text-secondary);
+    font-size: 0.72rem;
+  }
+
+  /* -- Browser (Gmail extension) -- */
+  .browser {
+    position: relative;
+    z-index: 1;
+    width: min(82%, 19rem);
+    padding: 1rem 1.2rem 1.3rem;
+    border: 1px solid var(--border);
+    border-radius: 0.7rem;
+    background: var(--surface);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .browser-top {
+    display: flex;
+    gap: 0.3rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .browser-top i {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--text-tertiary);
+  }
+
+  .browser p {
+    margin: 1.2rem 0 0.35rem;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+  }
+
+  .browser strong {
+    font-size: 2rem;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.12em;
+  }
+
+  .browser > span {
+    display: block;
+    margin-top: 0.55rem;
+    color: var(--text-tertiary);
+    font-size: 0.7rem;
+  }
+
+  /* -- Nodes (automation) -- */
+  .nodes {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .nodes span {
+    padding: 0.7rem 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    background: var(--surface);
+    font-size: 0.75rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .nodes i {
+    color: var(--card-accent);
+    font-style: normal;
+  }
+
+  .plus {
+    position: relative;
+    color: var(--card-accent);
+    font-size: 4rem;
+    font-weight: 200;
+  }
+
+  .more {
+    min-height: 12rem;
+  }
+
+  @media (max-width: 880px) {
+    .preview {
+      min-height: 17rem;
+    }
+  }
 </style>
