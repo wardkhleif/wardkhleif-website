@@ -2,7 +2,7 @@
 interface Props { href: string; variant?: 'primary'|'secondary'; }
 const { href, variant = 'primary' } = Astro.props;
 ---
-<a href={href} class:list={['button', variant]}><span class="label"><slot /></span><span class="arrow" aria-hidden="true">→</span></a>
+<a href={href} class:list={['button', variant]} data-magnetic data-magnetic-strength="0.2"><span class="label"><slot /></span><span class="arrow" aria-hidden="true">→</span></a>
 
 <style>
   .button {

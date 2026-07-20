@@ -45,7 +45,7 @@ const showEmailFallback = !formKey;
         {channels.length > 0 && (
           <div class="channels" data-stagger style="--stagger-step:90ms">
             {channels.map((c) => (
-              <a class="channel" href={c.href} target="_blank" rel="me noreferrer">
+              <a class="channel" href={c.href} target="_blank" rel="me noreferrer" data-spotlight>
                 <span class="channel-label">{c.label}</span>
                 <span class="channel-handle">{c.handle}</span>
                 <span class="channel-arrow" aria-hidden="true">↗</span>
@@ -93,7 +93,7 @@ const showEmailFallback = !formKey;
               <textarea id="message" name="message" rows="5" required placeholder=" "></textarea>
             </div>
 
-            <button type="submit" class="submit">
+            <button type="submit" class="submit" data-magnetic data-magnetic-strength="0.15">
               <span class="submit-label">Send message</span>
               <span class="arrow" aria-hidden="true">→</span>
             </button>
@@ -232,6 +232,7 @@ const showEmailFallback = !formKey;
     background: var(--background);
     text-decoration: none;
     color: var(--text-primary);
+    overflow: hidden;
     transition: padding-left 0.3s var(--ease-out);
   }
 
