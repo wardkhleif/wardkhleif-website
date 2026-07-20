@@ -5,16 +5,96 @@ import Footer from '../components/Footer.astro';
 import { site } from '../data/site';
 import '../styles/global.css';
 
-interface Props { title?: string; description?: string; image?: string; }
-const { title = site.title, description = site.description, image = '/og-image.png' } = Astro.props;
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  /** Trail for project pages, e.g. [{ name: 'Projects', href: '/projects' }]. */
+  breadcrumbs?: { name: string; href: string }[];
+}
+const {
+  title = site.title,
+  description = site.description,
+  image = '/og-image.png',
+  breadcrumbs = [],
+} = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, site.url);
 const imageUrl = new URL(image, site.url);
 const sameAs = [site.githubUrl, site.linkedinUrl].filter(Boolean);
-const schemas = [
-  { '@context': 'https://schema.org', '@type': 'Person', name: site.name, url: site.url, ...(sameAs.length ? { sameAs } : {}) },
-  { '@context': 'https://schema.org', '@type': 'WebSite', name: site.name, url: site.url, description: site.description },
-];
+const isHome = Astro.url.pathname === '/';
+
+/* Structured data. Everything is cross-linked by @id so search engines read
+   one entity ("Ward Khleif") rather than a set of unrelated nodes. */
+const personId = `${site.url}/#person`;
+const websiteId = `${site.url}/#website`;
+
+const person = {
+  '@type': 'Person',
+  '@id': personId,
+  name: site.name,
+  // The one-word spelling people actually type; without this there is nothing
+  // connecting the "wardkhleif" query to this person.
+  alternateName: ['wardkhleif', 'Ward Khleif'],
+  url: site.url,
+  image: new URL('/og-image.png', site.url).href,
+  jobTitle: 'Computer Science Student',
+  description: site.description,
+  knowsAbout: [
+    'Software development',
+    'iOS development',
+    'Swift',
+    'SwiftUI',
+    'Browser extensions',
+    'TypeScript',
+    'Automation',
+  ],
+  ...(sameAs.length ? { sameAs } : {}),
+};
+
+const website = {
+  '@type': 'WebSite',
+  '@id': websiteId,
+  name: site.name,
+  url: site.url,
+  description: site.description,
+  inLanguage: 'en',
+  publisher: { '@id': personId },
+};
+
+const page = {
+  // The homepage IS the profile — that pairing is what search engines use to
+  // resolve a name query to a person.
+  '@type': isHome ? 'ProfilePage' : 'WebPage',
+  '@id': `${canonical.href}#page`,
+  url: canonical.href,
+  name: title,
+  description,
+  isPartOf: { '@id': websiteId },
+  about: { '@id': personId },
+  ...(isHome ? { mainEntity: { '@id': personId } } : {}),
+};
+
+const trail = [{ name: 'Home', href: '/' }, ...breadcrumbs];
+const breadcrumbSchema =
+  breadcrumbs.length > 0
+    ? [
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: trail.map((crumb, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name: crumb.name,
+            item: new URL(crumb.href, site.url).href,
+          })),
+        },
+      ]
+    : [];
+
+const schemas = {
+  '@context': 'https://schema.org',
+  '@graph': [person, website, page, ...breadcrumbSchema],
+};
 ---
 
 <!doctype html>
@@ -37,7 +117,12 @@ const schemas = [
     href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap"
   />
 
-  <meta property="og:type" content="website" />
+  <meta name="author" content={site.name} />
+  <!-- Explicit, so a thin page is never dropped from the index by default. -->
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+
+  <meta property="og:type" content={isHome ? 'profile' : 'website'} />
+  <meta property="og:locale" content="en_US" />
   <meta property="og:site_name" content={site.name} />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
@@ -45,6 +130,7 @@ const schemas = [
   <meta property="og:image" content={imageUrl} />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content={`${site.name} — personal website`} />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />

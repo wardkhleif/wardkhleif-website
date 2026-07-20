@@ -15,8 +15,9 @@ import Logo from './Logo.astro'; import { navigation, site } from '../data/site'
       </nav>
       {(site.githubUrl || site.linkedinUrl) && (
         <div>
-          {site.githubUrl && <a href={site.githubUrl}>GitHub</a>}
-          {site.linkedinUrl && <a href={site.linkedinUrl}>LinkedIn</a>}
+          {/* rel="me" links this domain to the same identity on those profiles. */}
+          {site.githubUrl && <a href={site.githubUrl} rel="me">GitHub</a>}
+          {site.linkedinUrl && <a href={site.linkedinUrl} rel="me">LinkedIn</a>}
         </div>
       )}
     </div>

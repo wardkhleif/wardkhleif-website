@@ -17,7 +17,14 @@ const links = [
 ].filter(Boolean) as { label: string; href: string }[];
 ---
 
-<BaseLayout title={`${project.name} — Ward Khleif`} description={project.shortDescription}>
+<BaseLayout
+  title={`${project.name} — Ward Khleif`}
+  description={project.shortDescription}
+  breadcrumbs={[
+    { name: 'Projects', href: '/projects' },
+    { name: project.name, href: project.detailUrl || '/projects' },
+  ]}
+>
   <article class="project" style={`--card-accent:${project.accent}`}>
     <!-- Hero ----------------------------------------------------------------->
     <section class="section hero">
