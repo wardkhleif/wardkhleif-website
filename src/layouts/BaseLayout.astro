@@ -173,7 +173,7 @@ const schemas = {
       // Per-page state, refreshed by setupPage() on each navigation.
       const refs = {
         progress: null, header: null, nav: null,
-        parallax: [], timelines: [], fades: [], observer: null,
+        parallax: [], timelines: [], journeys: [], fades: [], observer: null,
       };
       let queued = false;
       let lastY = scrollY;
@@ -220,6 +220,44 @@ const schemas = {
           const rect = el.getBoundingClientRect();
           const drawn = clamp((vh * 0.75 - rect.top) / (rect.height * 0.85));
           el.style.setProperty('--timeline-progress', drawn.toFixed(3));
+        }
+
+        // Pinned journey chapters: one continuous progress value drives the
+        // environment while every card gets its own enter/hold/exit window.
+        for (const scene of refs.journeys) {
+          if (innerWidth <= 760 || reduce) continue;
+          const rect = scene.getBoundingClientRect();
+          const range = scene.offsetHeight - vh;
+          const p = clamp(-rect.top / range);
+          const cards = [...scene.querySelectorAll('[data-journey-card]')];
+          const count = cards.length;
+          const exact = p * Math.max(count - 1, 1);
+          const active = Math.min(count - 1, Math.round(exact));
+          scene.style.setProperty('--journey-progress', p.toFixed(4));
+          scene.style.setProperty('--journey-angle', `${(p * 360).toFixed(2)}deg`);
+          scene.style.setProperty('--ghost-x', `${((p - .5) * -90).toFixed(1)}px`);
+          scene.style.setProperty('--ghost-y', `${(Math.sin(p * Math.PI * 2) * 24).toFixed(1)}px`);
+          scene.style.setProperty('--ghost-scale', String(.88 + p * .28));
+          const ghost = scene.querySelector('.journey-ghost');
+          const status = scene.querySelector('.journey-status');
+          if (ghost) ghost.textContent = cards[active]?.querySelector('.year')?.textContent || '';
+          if (status) status.textContent = `CHAPTER ${String(active + 1).padStart(2, '0')}`;
+
+          cards.forEach((card, index) => {
+            const delta = index - exact;
+            const distance = Math.abs(delta);
+            const opacity = clamp(1 - distance);
+            const passed = delta < 0;
+            card.classList.toggle('is-active', index === active);
+            card.style.setProperty('--chapter-opacity', opacity.toFixed(3));
+            card.style.setProperty('--chapter-x', `${(delta * 120).toFixed(1)}px`);
+            card.style.setProperty('--chapter-y', `${(passed ? -1 : 1) * Math.min(distance * 70, 75)}px`);
+            card.style.setProperty('--chapter-z', `${(-distance * 260).toFixed(1)}px`);
+            card.style.setProperty('--chapter-rotate', `${(delta * 8).toFixed(2)}deg`);
+            card.style.setProperty('--chapter-scale', String(1 - Math.min(distance * .14, .18)));
+            card.style.setProperty('--chapter-blur', `${(distance * 6).toFixed(1)}px`);
+            card.style.setProperty('--chapter-glow-x', `${85 - delta * 28}%`);
+          });
         }
       };
 
@@ -270,6 +308,7 @@ const schemas = {
         refs.header = document.querySelector('header');
         refs.parallax = [...document.querySelectorAll('[data-parallax]')];
         refs.timelines = [...document.querySelectorAll('[data-timeline]')];
+        refs.journeys = [...document.querySelectorAll('[data-journey-scene]')];
         refs.fades = [...document.querySelectorAll('[data-scroll-fade]')];
         lastY = scrollY;
 

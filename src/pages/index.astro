@@ -54,27 +54,37 @@ const shown = projects.filter((project) => project.slug !== 'more');
   </section>
 
   <!-- ===================================================================
-       Journey — the spine draws itself as you scroll past it.
+       Journey — pinned chapters, one milestone at a time.
        =================================================================== -->
-  <section class="section journey" id="journey">
-    <div class="shell">
-      <header class="section-head" data-lines>
-        <span class="eyebrow line"><span>Journey</span></span>
-        <h2 class="line"><span>How I got here</span></h2>
+  <section class="journey" id="journey" data-journey-scene style={`--journey-count:${journey.length}`}>
+    <div class="journey-sticky shell">
+      <header class="journey-heading">
+        <span class="eyebrow">Journey</span>
+        <h2>How I got here</h2>
+        <p>Not a résumé. Just the moments that changed what I knew how to build.</p>
       </header>
 
-      <ol class="timeline" data-timeline>
-        {journey.map((entry) => (
-          <li class:list={['entry', { current: entry.current }]} data-reveal>
-            <div class="marker" aria-hidden="true"></div>
-            <p class="year">{entry.year}</p>
-            <div class="entry-body">
-              <h3>{entry.title}</h3>
-              <p>{entry.body}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
+      <div class="journey-stage">
+        <div class="journey-atmosphere" aria-hidden="true">
+          <span class="journey-ghost">{journey[0]?.year}</span>
+          <i></i><i></i><i></i>
+        </div>
+        <ol class="timeline">
+          {journey.map((entry, index) => (
+            <li class:list={['entry', { current: entry.current }]} data-journey-card={index}>
+              <div class="entry-top"><span>{String(index + 1).padStart(2, '0')} / {String(journey.length).padStart(2, '0')}</span><p class="year">{entry.year}</p></div>
+              <div class="entry-body"><h3>{entry.title}</h3><p>{entry.body}</p></div>
+              {entry.current && <span class="live"><i></i> Right now</span>}
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <div class="journey-footer" aria-hidden="true">
+        <span class="journey-status">CHAPTER 01</span>
+        <div class="journey-progress"><span></span></div>
+        <span>SCROLL TO CONTINUE ↓</span>
+      </div>
     </div>
   </section>
 
@@ -216,134 +226,17 @@ const shown = projects.filter((project) => project.slug !== 'more');
   }
 
   /* ---- Journey -------------------------------------------------------- */
-  .journey {
-    background: var(--surface);
-    border-block: 1px solid var(--border);
-  }
+  .journey{height:calc(var(--journey-count) * 92vh + 100vh);position:relative;background:var(--text-primary);color:var(--background);border-block:1px solid var(--border);isolation:isolate}
+  .journey-sticky{height:100vh;position:sticky;top:0;display:grid;grid-template-columns:.72fr 1.28fr;grid-template-rows:1fr auto;gap:clamp(2rem,7vw,7rem);align-items:center;overflow:hidden;padding-block:clamp(4.5rem,9vh,7rem) 2rem}
+  .journey-heading{position:relative;z-index:4;align-self:center}.journey-heading .eyebrow{color:var(--accent-bright)}.journey-heading h2{max-width:7ch;margin:.8rem 0 1.4rem;font-size:clamp(3.5rem,7vw,6.8rem);line-height:.84;letter-spacing:-.065em}.journey-heading>p{max-width:25rem;margin:0;color:color-mix(in srgb,var(--background) 62%,transparent);line-height:1.65}
+  .journey-stage{position:relative;z-index:2;align-self:stretch;display:grid;place-items:center;perspective:1400px}.timeline{position:relative;z-index:3;width:min(100%,40rem);height:28rem;margin:0;padding:0;list-style:none;transform-style:preserve-3d}
+  .entry{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(1.6rem,4vw,3rem);border:1px solid color-mix(in srgb,var(--background) 24%,transparent);border-radius:1.1rem;background:color-mix(in srgb,var(--text-primary) 86%,var(--surface));box-shadow:0 40px 100px rgba(0,0,0,.36);opacity:var(--chapter-opacity,0);transform:translate3d(var(--chapter-x,80px),var(--chapter-y,40px),var(--chapter-z,-180px)) rotateY(var(--chapter-rotate,8deg)) scale(var(--chapter-scale,.84));filter:blur(var(--chapter-blur,9px));will-change:transform,opacity,filter;pointer-events:none}.entry.is-active{pointer-events:auto}.entry::before{content:"";position:absolute;inset:-1px;border-radius:inherit;background:radial-gradient(circle at var(--chapter-glow-x,85%) 15%,color-mix(in srgb,var(--accent-bright) 14%,transparent),transparent 38%);pointer-events:none}.entry-top{display:flex;justify-content:space-between;gap:2rem;padding-bottom:1.2rem;border-bottom:1px solid color-mix(in srgb,var(--background) 18%,transparent);font:500 .66rem/1 monospace;letter-spacing:.09em;text-transform:uppercase}.entry-top>span{color:var(--accent-bright)}.year{margin:0;color:var(--background);font-variant-numeric:tabular-nums}.entry-body{position:relative;z-index:1}.entry-body h3{max-width:14ch;margin:0 0 1rem;font-size:clamp(2rem,4vw,3.7rem);line-height:.94;letter-spacing:-.055em}.entry-body p{max-width:34rem;margin:0;color:color-mix(in srgb,var(--background) 62%,transparent);line-height:1.7}.live{display:inline-flex;align-items:center;gap:.6rem;width:max-content;color:var(--accent-bright);font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}.live i{width:.5rem;height:.5rem;border-radius:50%;background:currentColor;box-shadow:0 0 0 5px color-mix(in srgb,var(--accent-bright) 12%,transparent);animation:pulse 2.4s ease-out infinite}
+  .journey-atmosphere{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}.journey-ghost{position:absolute;color:var(--accent-bright);font-size:clamp(8rem,18vw,18rem);font-weight:650;line-height:.8;letter-spacing:-.09em;opacity:.09;transform:translate3d(var(--ghost-x,0),var(--ghost-y,0),0) scale(var(--ghost-scale,1));filter:blur(var(--ghost-blur,0));white-space:nowrap}.journey-atmosphere i{position:absolute;width:min(55vw,38rem);aspect-ratio:1;border:1px solid color-mix(in srgb,var(--background) 10%,transparent);border-radius:50%;transform:rotate(calc(var(--journey-progress,0) * 180deg))}.journey-atmosphere i:nth-of-type(2){width:min(40vw,27rem);border-style:dashed;transform:rotate(calc(var(--journey-progress,0) * -260deg))}.journey-atmosphere i:nth-of-type(3){width:.6rem;background:var(--accent-bright);border:0;box-shadow:0 0 20px var(--accent-bright);transform:rotate(var(--journey-angle,0deg)) translateX(15rem)}
+  .journey-footer{grid-column:1/-1;display:grid;grid-template-columns:auto 1fr auto;gap:1.2rem;align-items:center;color:color-mix(in srgb,var(--background) 54%,transparent);font:500 .58rem/1 monospace;letter-spacing:.1em}.journey-status{color:var(--background)}.journey-progress{height:2px;background:color-mix(in srgb,var(--background) 13%,transparent);overflow:hidden}.journey-progress span{display:block;width:100%;height:100%;background:var(--accent-bright);transform:scaleX(var(--journey-progress,0));transform-origin:left}
+  @keyframes pulse{0%{transform:scale(.8);opacity:.8}70%,100%{transform:scale(2.6);opacity:0}}
 
-  .timeline {
-    position: relative;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  /* Track + spine. The spine scales vertically with scroll progress, so the
-     line appears to draw itself alongside the entries. */
-  .timeline::before,
-  .timeline::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0.6rem;
-    bottom: 0.6rem;
-    width: 1px;
-  }
-
-  .timeline::before {
-    background: var(--border);
-  }
-
-  .timeline::after {
-    background: var(--text-primary);
-    transform: scaleY(var(--timeline-progress, 0));
-    transform-origin: 50% 0;
-  }
-
-  .entry {
-    position: relative;
-    display: grid;
-    grid-template-columns: 9rem minmax(0, 1fr);
-    gap: clamp(1.5rem, 4vw, 3rem);
-    padding: 0 0 clamp(2.75rem, 5vw, 4rem) clamp(2rem, 4vw, 3.5rem);
-  }
-
-  .entry:last-child {
-    padding-bottom: 0;
-  }
-
-  /* Entries arrive from the spine rather than straight up, so the eye reads
-     the line as the thing carrying them. */
-  :global(.has-motion) .entry[data-reveal] {
-    transform: translate3d(-14px, 14px, 0);
-  }
-
-  :global(.has-motion) .entry[data-reveal].is-revealed {
-    transform: none;
-  }
-
-  .marker {
-    position: absolute;
-    left: 0;
-    top: 0.55rem;
-    width: 9px;
-    height: 9px;
-    margin-left: -4px;
-    border-radius: 50%;
-    background: var(--background);
-    box-shadow: inset 0 0 0 1px var(--border-strong);
-    transition: transform 0.7s var(--ease-out) 0.15s, background-color 0.5s var(--ease-out);
-  }
-
-  :global(.has-motion) .entry[data-reveal] .marker {
-    transform: scale(0);
-  }
-
-  :global(.has-motion) .entry[data-reveal].is-revealed .marker {
-    transform: scale(1);
-  }
-
-  .entry.current .marker {
-    background: var(--text-primary);
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--text-primary) 12%, transparent);
-  }
-
-  /* The one live entry gets a slow pulse — the only looping animation on the
-     page, and it's carrying meaning. */
-  .entry.current .marker::after {
-    content: "";
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;
-    border: 1px solid var(--text-primary);
-    animation: pulse 2.8s var(--ease-out) infinite;
-  }
-
-  @keyframes pulse {
-    0% { transform: scale(0.8); opacity: 0.7; }
-    70%, 100% { transform: scale(2.4); opacity: 0; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .entry.current .marker::after {
-      display: none;
-    }
-  }
-
-  .year {
-    margin: 0;
-    color: var(--text-tertiary);
-    font-size: 0.88rem;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.02em;
-  }
-
-  .entry.current .year {
-    color: var(--text-primary);
-    font-weight: 500;
-  }
-
-  .entry-body h3 {
-    margin: 0 0 0.6rem;
-    font-size: clamp(1.15rem, 1.9vw, 1.45rem);
-  }
-
-  .entry-body p {
-    margin: 0;
-    max-width: 42rem;
-    color: var(--text-secondary);
-    line-height: 1.65;
-  }
+  @media(max-width:760px){.journey{height:auto;padding-block:5rem}.journey-sticky{height:auto;position:relative;display:block;overflow:visible;padding-block:0}.journey-heading{margin-bottom:3rem}.journey-heading h2{font-size:3.6rem}.journey-stage{display:block}.journey-atmosphere,.journey-footer{display:none}.timeline{width:100%;height:auto;display:grid;gap:1rem}.entry{position:relative;inset:auto;min-height:24rem;opacity:1;transform:none;filter:none}.entry-body h3{font-size:2.2rem}}
+  @media(prefers-reduced-motion:reduce){.journey{height:auto;padding-block:6rem}.journey-sticky{height:auto;position:relative;display:block;overflow:visible;padding-block:0}.journey-heading{margin-bottom:3rem}.journey-stage{display:block}.journey-atmosphere,.journey-footer{display:none}.timeline{height:auto;display:grid;gap:1rem}.entry{position:relative;opacity:1;transform:none;filter:none}.live i{animation:none}}
 
   /* ---- Skills --------------------------------------------------------- */
   .skill-grid {
