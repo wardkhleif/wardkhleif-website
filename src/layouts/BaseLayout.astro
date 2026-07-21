@@ -359,5 +359,10 @@ const schemas = {
       document.addEventListener('astro:page-load', setupPage);
     }
   </script>
+
+  <script>
+    import { initInteractions } from '../scripts/interactions';
+    document.addEventListener('astro:page-load', initInteractions);
+  </script>
 </body>
 </html>

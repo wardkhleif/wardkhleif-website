@@ -13,7 +13,7 @@ const active = (href: string) => href === '/' ? path === '/' : path.startsWith(h
       {navigation.map(item => <a href={item.href} aria-current={active(item.href) ? 'page' : undefined}>{item.label}</a>)}
     </nav>
     <div class="actions">
-      {site.githubUrl && <a class="github" href={site.githubUrl} target="_blank" rel="me noreferrer">GitHub</a>}
+      {site.githubUrl && <a class="github" href={site.githubUrl} target="_blank" rel="me noreferrer" data-magnetic data-magnetic-strength="0.3">GitHub</a>}
       <ThemeToggle />
       <button class="menu" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Open navigation menu"><span></span><span></span></button>
     </div>

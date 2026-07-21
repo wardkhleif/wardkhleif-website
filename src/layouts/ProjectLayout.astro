@@ -128,7 +128,7 @@ const links = [
     <!-- Status + CTA --------------------------------------------------------->
     <section class="section closing">
       <div class="shell">
-        <div class="status-band" data-reveal>
+        <div class="status-band" data-reveal data-spotlight>
           <div>
             <span class="eyebrow">Where it's at</span>
             <p class="status-line">{project.status}. Being built deliberately — no availability or approval is implied yet.</p>
@@ -384,6 +384,7 @@ const links = [
     border: 1px solid var(--border);
     border-radius: 1.1rem;
     background: var(--surface);
+    overflow: hidden;
   }
 
   .status-band .eyebrow {

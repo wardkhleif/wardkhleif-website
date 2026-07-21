@@ -295,6 +295,38 @@ p {
   transform: scaleX(1);
 }
 
+/* Spotlight — a cursor-tracked glow for interactive panels. JS toggles
+   `.is-active` and updates --spot-x/--spot-y on pointer move; falls back to
+   nothing (no ::after) when JS never binds it. */
+[data-spotlight] {
+  position: relative;
+}
+
+[data-spotlight]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    360px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    color-mix(in srgb, var(--card-accent, var(--accent-bright)) 20%, transparent),
+    transparent 62%
+  );
+  opacity: 0;
+  transition: opacity 0.45s var(--ease-out);
+}
+
+[data-spotlight].is-active::after {
+  opacity: 1;
+}
+
+/* Elements bound for magnetic pull need a transform-friendly box; JS sets
+   x/y via `motion`, this just guarantees the box type it can animate. */
+[data-magnetic] {
+  display: inline-flex;
+  align-items: center;
+}
+
 .scroll-progress {
   position: fixed;
   inset: 0 auto auto 0;
