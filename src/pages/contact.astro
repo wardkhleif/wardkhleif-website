@@ -93,7 +93,7 @@ const showEmailFallback = !formKey;
               <textarea id="message" name="message" rows="5" required placeholder=" "></textarea>
             </div>
 
-            <button type="submit" class="submit" data-magnetic data-magnetic-strength="0.15">
+            <button type="submit" class="submit shine" data-magnetic data-magnetic-strength="0.15">
               <span class="submit-label">Send message</span>
               <span class="arrow" aria-hidden="true">→</span>
             </button>
@@ -368,6 +368,12 @@ const showEmailFallback = !formKey;
 
   .submit .arrow {
     transition: transform 0.25s var(--ease-out);
+  }
+
+  .submit-label,
+  .submit .arrow {
+    position: relative;
+    z-index: 1;
   }
 
   .submit:hover:not(:disabled) .arrow {

@@ -1,5 +1,40 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro'; import ButtonLink from '../components/ButtonLink.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ButtonLink from '../components/ButtonLink.astro';
 ---
-<BaseLayout title="Page not found — Ward Khleif" description="The requested page could not be found."><section class="not-found"><div class="shell"><p class="code">404</p><h1>This page wandered off.</h1><p>The link may be outdated, or the page may have moved. The useful parts are still close by.</p><ButtonLink href="/">Return home</ButtonLink></div></section></BaseLayout>
-<style>.not-found{min-height:65vh;display:grid;place-items:center;text-align:center}.code{font:700 .85rem monospace;color:var(--accent-bright);letter-spacing:.15em}.not-found h1{font-size:clamp(3rem,8vw,6rem);margin:.5rem}.not-found p:not(.code){color:var(--text-secondary);margin:0 auto 2rem}</style>
+
+<BaseLayout title="Page not found — Ward Khleif" description="The requested page could not be found.">
+  <section class="not-found">
+    <div class="shell" data-reveal>
+      <p class="code">404</p>
+      <h1>This page wandered off.</h1>
+      <p>The link may be outdated, or the page may have moved. The useful parts are still close by.</p>
+      <ButtonLink href="/">Return home</ButtonLink>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    min-height: 65vh;
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+
+  .code {
+    font: 700 0.85rem monospace;
+    color: var(--accent-bright);
+    letter-spacing: 0.15em;
+  }
+
+  .not-found h1 {
+    margin: 0.5rem;
+    font-size: clamp(3rem, 8vw, 6rem);
+  }
+
+  .not-found p:not(.code) {
+    margin: 0 auto 2rem;
+    color: var(--text-secondary);
+  }
+</style>

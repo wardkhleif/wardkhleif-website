@@ -58,7 +58,7 @@ const links = [
             )}
           </div>
 
-          <div class="hero-visual">
+          <div class="hero-visual" data-tilt data-tilt-strength="6">
             <div class="visual-inner" data-wipe>
               <ProductPreview type={project.preview} />
             </div>
@@ -242,6 +242,11 @@ const links = [
 
   .hero-links a:hover {
     border-color: var(--card-accent);
+  }
+
+  .hero-visual {
+    transform: perspective(1400px) rotateX(var(--tilt-rx, 0deg)) rotateY(var(--tilt-ry, 0deg));
+    will-change: transform;
   }
 
   .visual-inner {

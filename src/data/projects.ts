@@ -15,12 +15,12 @@ export const projects: Project[] = [
     principles: ['Private by default', 'Deliberate deletion', 'Fast, focused decisions'],
   },
   {
-    slug: 'gmail-verification-extension', name: 'Gmail Verification Code Extension', status: 'In development', platform: 'Chrome Extension',
-    shortDescription: 'A browser extension designed to find recent verification codes in Gmail and make them easier to access when signing in.',
-    fullDescription: 'The extension connects to Gmail through user-authorized OAuth access, searches relevant recent messages, extracts likely one-time verification codes, and presents them in a faster workflow.',
-    technologies: ['TypeScript', 'Chrome Extensions', 'Gmail API', 'OAuth 2.0'], accent: '#f6b84a', detailUrl: '/projects/gmail-verification-extension', externalUrl: '', repositoryUrl: '', featured: true, preview: 'codes',
-    features: ['User-authorized access', 'Focused Gmail permissions', 'Fast access to recent codes', 'Clear privacy communication'],
-    principles: ['Explicit authorization', 'Minimal permissions', 'A focused workflow'],
+    slug: 'gmail-verification-extension', name: 'MailKey', subtitle: 'Verification codes for Gmail', status: 'In development', platform: 'Chrome Extension',
+    shortDescription: 'A Chrome extension that spots the verification code that just landed in your Gmail and offers to fill it in with one click.',
+    fullDescription: 'MailKey is Apple\'s SMS autofill idea, moved to email. When a site asks for a verification code, it checks Gmail read-only for mail from the last 60 minutes, finds the code, and offers it as a chip you can click to fill. Nothing is auto-filled, nothing is auto-submitted, and nothing leaves the device — there is no server and no analytics.',
+    technologies: ['JavaScript', 'Chrome Extensions (MV3)', 'Gmail API', 'OAuth 2.0'], accent: '#2563EB', detailUrl: '/projects/gmail-verification-extension', externalUrl: '', repositoryUrl: '', featured: true, preview: 'codes',
+    features: ['Read-only Gmail access, granted through Chrome', 'Only ever asks Google for mail from the last 60 minutes', 'One click to fill — never automatic, never submitted for you', 'Shows the sending domain next to the code', 'The code lives in session memory for 60 seconds, then is wiped', 'Email bodies are parsed in memory and discarded', 'No backend, no analytics, nothing leaves your device', 'Runs on every site, or only the ones you list'],
+    principles: ['Read-only, last hour only', 'Nothing leaves the device', 'The click is always yours'],
   },
   {
     slug: 'scheduling-automation', name: 'Scheduling & Messaging Automation', status: 'Private project', platform: 'Business automation',

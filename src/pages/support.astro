@@ -1,6 +1,210 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro'; import { site } from '../data/site';
-const groups=[{name:'Swoopix',platform:'iOS',topics:['Photo access permissions','Trash Review behavior','iCloud-only assets','Video compression','Restoring or reviewing queued items']},{name:'Gmail Verification Code Extension',platform:'Chrome Extension',topics:['Gmail authorization','Permissions','Code detection','Signing out or revoking access','Reporting an incorrectly detected code']}];
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+
+const groups = [
+  {
+    name: 'Swoopix',
+    platform: 'iOS',
+    topics: [
+      'Photo access permissions',
+      'Trash Review behavior',
+      'iCloud-only assets',
+      'Video compression',
+      'Restoring or reviewing queued items',
+    ],
+  },
+  {
+    name: 'Gmail Verification Code Extension',
+    platform: 'Chrome Extension',
+    topics: [
+      'Gmail authorization',
+      'Permissions',
+      'Code detection',
+      'Signing out or revoking access',
+      'Reporting an incorrectly detected code',
+    ],
+  },
+];
 ---
-<BaseLayout title="Product Support — Ward Khleif" description="Support information for Ward Khleif's apps, browser extensions, and digital products."><section class="page-hero"><div class="shell"><p class="eyebrow">Product support</p><h1>Help with the products I’m building.</h1><p>Support documentation will expand as products are released. These starting points cover common questions and responsible ways to report issues.</p></div></section><section><div class="shell product-grid">{groups.map(group=><article><span>{group.platform}</span><h2>{group.name}</h2><ul>{group.topics.map(topic=><li>{topic}</li>)}</ul></article>)}</div></section><section><div class="shell common"><div><p class="eyebrow">Common support</p><h2>Useful details make issues easier to solve.</h2></div><div class="items"><article><h3>Privacy questions</h3><p>Include the product name and the permission or data behavior you are asking about. Never send passwords, verification codes, or private message contents.</p></article><article><h3>Bug reports</h3><p>Share the product, device or browser version, what you expected, what happened, and safe steps that reproduce the issue.</p></article><article><h3>Feature requests</h3><p>Describe the problem you are trying to solve and why the current workflow gets in the way.</p></article>{site.email?<a href={`mailto:${site.email}`}>Contact support →</a>:<p class="pending">A public support contact method is being prepared.</p>}</div></div></section></BaseLayout>
-<style>.page-hero{padding:7rem 0 5rem}.page-hero h1{font-size:clamp(3rem,8vw,6rem);max-width:13ch}.page-hero p:last-child{color:var(--text-secondary);max-width:45rem;font-size:1.15rem}.product-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.product-grid article{padding:2rem;border:1px solid var(--border);background:var(--surface);border-radius:1rem}.product-grid article>span{color:var(--accent-bright);font-size:.75rem;text-transform:uppercase;letter-spacing:.1em}.product-grid h2{font-size:1.7rem;margin-top:1rem}.product-grid ul{padding-left:1.2rem;color:var(--text-secondary);line-height:2}.common{display:grid;grid-template-columns:1fr 1fr;gap:5rem;padding-top:7rem}.items article{border-bottom:1px solid var(--border);padding:0 0 1rem;margin-bottom:1.5rem}.items p{color:var(--text-secondary)}.pending{padding:1rem;border:1px solid var(--border);border-radius:.7rem}@media(max-width:700px){.product-grid,.common{grid-template-columns:1fr}.common{gap:2rem}}</style>
+
+<BaseLayout
+  title="Product Support — Ward Khleif"
+  description="Support information for Ward Khleif's apps, browser extensions, and digital products."
+>
+  <section class="page-hero">
+    <div class="shell">
+      <header data-lines>
+        <span class="eyebrow line"><span>Product support</span></span>
+        <h1 class="line"><span>Help with the products I'm building.</span></h1>
+      </header>
+      <p data-reveal data-reveal-delay="120">
+        Support documentation will expand as products are released. These
+        starting points cover common questions and responsible ways to
+        report issues.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell product-grid">
+      {groups.map((group) => (
+        <article data-reveal data-spotlight>
+          <span class="platform">{group.platform}</span>
+          <h2>{group.name}</h2>
+          <ul>
+            {group.topics.map((topic) => <li>{topic}</li>)}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell common">
+      <div>
+        <span class="eyebrow">Common support</span>
+        <h2>Useful details make issues easier to solve.</h2>
+      </div>
+      <div class="items" data-stagger style="--stagger-step:70ms">
+        <article>
+          <h3>Privacy questions</h3>
+          <p>
+            Include the product name and the permission or data behavior you
+            are asking about. Never send passwords, verification codes, or
+            private message contents.
+          </p>
+        </article>
+        <article>
+          <h3>Bug reports</h3>
+          <p>
+            Share the product, device or browser version, what you expected,
+            what happened, and safe steps that reproduce the issue.
+          </p>
+        </article>
+        <article>
+          <h3>Feature requests</h3>
+          <p>
+            Describe the problem you are trying to solve and why the current
+            workflow gets in the way.
+          </p>
+        </article>
+        {site.email ? (
+          <a href={`mailto:${site.email}`}>Contact support →</a>
+        ) : (
+          <p class="pending">A public support contact method is being prepared.</p>
+        )}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-hero {
+    padding: clamp(4.5rem, 10vh, 7rem) 0 clamp(3rem, 7vh, 5rem);
+  }
+
+  .page-hero h1 {
+    margin: 0.8rem 0 1.5rem;
+    font-size: clamp(3rem, 8vw, 6rem);
+    max-width: 13ch;
+  }
+
+  .page-hero p {
+    margin: 0;
+    color: var(--text-secondary);
+    max-width: 45rem;
+    font-size: 1.15rem;
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .product-grid article {
+    position: relative;
+    padding: 2rem;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+
+  .product-grid .platform {
+    color: var(--accent-bright);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .product-grid h2 {
+    font-size: 1.7rem;
+    margin: 1rem 0 0;
+  }
+
+  .product-grid ul {
+    margin: 1rem 0 0;
+    padding-left: 1.2rem;
+    color: var(--text-secondary);
+    line-height: 2;
+  }
+
+  .common {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(3rem, 7vw, 5rem);
+    padding-top: clamp(4rem, 9vw, 7rem);
+    border-top: 1px solid var(--border);
+  }
+
+  .common h2 {
+    margin: 0.8rem 0 0;
+  }
+
+  .items article {
+    border-bottom: 1px solid var(--border);
+    padding: 0 0 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .items h3 {
+    margin: 0 0 0.5rem;
+  }
+
+  .items p {
+    margin: 0;
+    color: var(--text-secondary);
+  }
+
+  .items a {
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-strong);
+    padding-bottom: 0.15rem;
+    transition: border-color 0.25s var(--ease-out);
+  }
+
+  .items a:hover {
+    border-color: var(--accent-bright);
+  }
+
+  .pending {
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 0.7rem;
+  }
+
+  @media (max-width: 700px) {
+    .product-grid,
+    .common {
+      grid-template-columns: 1fr;
+    }
+
+    .common {
+      gap: 2rem;
+    }
+  }
+</style>

@@ -1,6 +1,198 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-const builds=['Software development','iOS and mobile','Browser extensions','Automation and the web']; const steps=['Get curious about something','Learn what I need','Build a working version','Break it and improve it','Share what I learned'];
+
+const builds = [
+  'Software development',
+  'iOS and mobile',
+  'Browser extensions',
+  'Automation and the web',
+];
+
+const steps = [
+  'Get curious about something',
+  'Learn what I need',
+  'Build a working version',
+  'Break it and improve it',
+  'Share what I learned',
+];
 ---
-<BaseLayout title="About — Ward Khleif" description="About Ward Khleif, a computer science student who learns by building software projects."><section class="about-hero"><div class="shell"><p class="eyebrow">About</p><h1>I’m a computer science student who learns by building.</h1><div class="intro"><p>I’m Ward Khleif. I study computer science and spend a lot of my time turning ideas into small apps, extensions, websites, and experiments.</p><p>Most projects start with curiosity or something in my own day that feels unnecessarily difficult. Building it gives me a reason to understand the technology properly—not only in theory, but in a working result.</p><p>This website is a record of that process: what I have made, what I am exploring now, and how my thinking changes as I learn more.</p></div></div></section><section><div class="shell split"><div><p class="eyebrow">Areas I enjoy</p><h2>Learning across<br/>different layers.</h2></div><ul>{builds.map((item,i)=><li><span>0{i+1}</span>{item}</li>)}</ul></div></section><section><div class="shell process"><p class="eyebrow">How I learn</p><h2>Curiosity, code, and a lot of iteration.</h2><ol>{steps.map((step,i)=><li data-reveal><span>{String(i+1).padStart(2,'0')}</span><h3>{step}</h3></li>)}</ol></div></section></BaseLayout>
-<style>.about-hero{padding:7rem 0}.about-hero h1{font-size:clamp(3rem,8vw,6.5rem);max-width:15ch}.intro{margin:4rem 0 0 auto;max-width:43rem}.intro p{color:var(--text-secondary);font-size:1.15rem;line-height:1.8}.split{border-top:1px solid var(--border);padding:6rem 0;display:grid;grid-template-columns:1fr 1fr;gap:5rem}.split ul{list-style:none;margin:0;padding:0}.split li{font-size:1.45rem;padding:1.2rem 0;border-bottom:1px solid var(--border)}.split li span{color:var(--accent-bright);font: .8rem monospace;margin-right:1rem}.process{padding:6rem 0}.process h2{max-width:14ch}.process ol{list-style:none;padding:0;margin-top:3rem;border-top:1px solid var(--border)}.process li{display:grid;grid-template-columns:5rem 1fr;align-items:center;border-bottom:1px solid var(--border);padding:1.4rem 0}.process li span{color:var(--accent-bright);font-family:monospace}.process h3{margin:0}@media(max-width:700px){.split{grid-template-columns:1fr;gap:2rem}.about-hero{padding:5rem 0}.intro{margin-top:2rem}}</style>
+
+<BaseLayout
+  title="About — Ward Khleif"
+  description="About Ward Khleif, a computer science student who learns by building software projects."
+>
+  <section class="about-hero">
+    <div class="shell">
+      <header data-lines>
+        <span class="eyebrow line"><span>About</span></span>
+        <h1 class="line"><span>I'm a computer science student who learns by building.</span></h1>
+      </header>
+
+      <div class="intro">
+        <p data-reveal>
+          I'm Ward Khleif. I study computer science and spend a lot of my time
+          turning ideas into small apps, extensions, websites, and experiments.
+        </p>
+        <p data-reveal data-reveal-delay="90">
+          Most projects start with curiosity or something in my own day that
+          feels unnecessarily difficult. Building it gives me a reason to
+          understand the technology properly — not only in theory, but in a
+          working result.
+        </p>
+        <p data-reveal data-reveal-delay="180">
+          This website is a record of that process: what I have made, what I
+          am exploring now, and how my thinking changes as I learn more.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell split">
+      <div>
+        <span class="eyebrow">Areas I enjoy</span>
+        <h2>Learning across<br />different layers.</h2>
+      </div>
+      <ul data-stagger style="--stagger-step:80ms">
+        {builds.map((item, i) => (
+          <li>
+            <span>0{i + 1}</span>
+            {item}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell process">
+      <header data-lines>
+        <span class="eyebrow line"><span>How I learn</span></span>
+        <h2 class="line"><span>Curiosity, code, and a lot of iteration.</span></h2>
+      </header>
+      <ol data-stagger style="--stagger-step:70ms">
+        {steps.map((step, i) => (
+          <li>
+            <span>{String(i + 1).padStart(2, '0')}</span>
+            <h3>{step}</h3>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-hero {
+    padding: clamp(4.5rem, 10vh, 7rem) 0 clamp(3rem, 7vh, 5rem);
+  }
+
+  .about-hero h1 {
+    margin: 0.8rem 0 0;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    max-width: 15ch;
+  }
+
+  .intro {
+    margin: clamp(2.5rem, 6vw, 4rem) 0 0 auto;
+    max-width: 43rem;
+    display: grid;
+    gap: 1.3rem;
+  }
+
+  .intro p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 1.15rem;
+    line-height: 1.8;
+  }
+
+  .split {
+    border-top: 1px solid var(--border);
+    padding: clamp(4rem, 9vw, 6rem) 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2.5rem, 6vw, 5rem);
+    align-items: start;
+  }
+
+  .split h2 {
+    margin: 0.8rem 0 0;
+  }
+
+  .split ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .split li {
+    font-size: 1.45rem;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid var(--border);
+    transition: padding-left 0.35s var(--ease-out);
+  }
+
+  .split li:hover {
+    padding-left: 0.6rem;
+  }
+
+  .split li span {
+    color: var(--accent-bright);
+    font: 0.8rem monospace;
+    margin-right: 1rem;
+  }
+
+  .process {
+    padding: clamp(4rem, 9vw, 6rem) 0;
+  }
+
+  .process h2 {
+    margin: 0.8rem 0 0;
+    max-width: 14ch;
+  }
+
+  .process ol {
+    list-style: none;
+    padding: 0;
+    margin: clamp(2.5rem, 6vw, 3.5rem) 0 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .process li {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    padding: 1.4rem 0;
+    transition: padding-left 0.35s var(--ease-out);
+  }
+
+  .process li:hover {
+    padding-left: 0.6rem;
+  }
+
+  .process li span {
+    color: var(--accent-bright);
+    font-family: monospace;
+  }
+
+  .process h3 {
+    margin: 0;
+  }
+
+  @media (max-width: 700px) {
+    .split {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .about-hero {
+      padding-top: 4rem;
+    }
+
+    .intro {
+      margin-top: 2rem;
+    }
+  }
+</style>

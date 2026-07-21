@@ -9,6 +9,7 @@ const canAnimate = () =>
 
 const SPRING = { type: 'spring', stiffness: 300, damping: 20, mass: 0.4 } as const;
 const SPRING_BACK = { type: 'spring', stiffness: 260, damping: 18 } as const;
+const TILT_SPRING = { type: 'spring', stiffness: 220, damping: 24, mass: 0.5 } as const;
 
 /** Pulls an element a fraction of the way toward the cursor, spring-back on leave. */
 function bindMagnetic(el: HTMLElement) {
@@ -48,8 +49,39 @@ function bindSpotlight(el: HTMLElement) {
   el.addEventListener('pointerleave', () => el.classList.remove('is-active'));
 }
 
+/** Tilts a panel in 3D toward the cursor via CSS vars, spring-settles flat on leave. */
+function bindTilt(el: HTMLElement) {
+  if (el.dataset.tiltBound) return;
+  el.dataset.tiltBound = '1';
+
+  const max = Number(el.dataset.tiltStrength) || 7;
+  let rect = el.getBoundingClientRect();
+
+  el.addEventListener('pointerenter', () => {
+    rect = el.getBoundingClientRect();
+  });
+
+  el.addEventListener('pointermove', (e) => {
+    const px = (e.clientX - rect.left) / rect.width;
+    const py = (e.clientY - rect.top) / rect.height;
+    animate(
+      el,
+      {
+        '--tilt-rx': `${((0.5 - py) * max * 2).toFixed(2)}deg`,
+        '--tilt-ry': `${((px - 0.5) * max * 2).toFixed(2)}deg`,
+      } as Record<string, string>,
+      TILT_SPRING
+    );
+  });
+
+  el.addEventListener('pointerleave', () => {
+    animate(el, { '--tilt-rx': '0deg', '--tilt-ry': '0deg' } as Record<string, string>, SPRING_BACK);
+  });
+}
+
 export function initInteractions() {
   if (!canAnimate()) return;
   document.querySelectorAll<HTMLElement>('[data-magnetic]').forEach(bindMagnetic);
   document.querySelectorAll<HTMLElement>('[data-spotlight]').forEach(bindSpotlight);
+  document.querySelectorAll<HTMLElement>('[data-tilt]').forEach(bindTilt);
 }

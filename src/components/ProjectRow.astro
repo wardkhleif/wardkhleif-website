@@ -33,7 +33,7 @@ const Tag = href ? 'a' : 'div';
       {href && <span class="cta">View project <span class="arrow" aria-hidden="true">→</span></span>}
     </div>
 
-    <div class="visual" data-parallax="40">
+    <div class="visual" data-parallax="40" data-tilt data-tilt-strength="6">
       <div class="visual-inner" data-wipe data-spotlight>
         <ProductPreview type={project.preview} />
       </div>
@@ -151,7 +151,8 @@ const Tag = href ? 'a' : 'div';
   }
 
   .visual {
-    transform: translate3d(0, var(--parallax-y, 0), 0);
+    transform: perspective(1400px) translate3d(0, var(--parallax-y, 0), 0)
+      rotateX(var(--tilt-rx, 0deg)) rotateY(var(--tilt-ry, 0deg));
     will-change: transform;
   }
 

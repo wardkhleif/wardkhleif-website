@@ -1,0 +1,398 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { site } from '../../data/site';
+---
+
+<BaseLayout
+  title="MailKey Privacy Policy — Ward Khleif"
+  description="Privacy policy for the MailKey Chrome extension: read-only Gmail access limited to the last 60 minutes, no servers, no analytics, and nothing stored beyond the moment of use."
+  breadcrumbs={[{ name: 'MailKey', href: '/projects/gmail-verification-extension' }, { name: 'Privacy', href: '/mailkey/privacy' }]}
+>
+  <section class="legal">
+    <div class="shell legal-grid">
+      <aside data-lines>
+        <span class="eyebrow line"><span>MailKey</span></span>
+        <h1 class="line"><span>Privacy policy.</span></h1>
+        <p class="line"><span>Effective date: 21 July 2026</span></p>
+        <p class="line"><span>Applies to the MailKey browser extension for Google Chrome.</span></p>
+        <a class="back line" href="/projects/gmail-verification-extension">
+          <span><span aria-hidden="true">←</span> About MailKey</span>
+        </a>
+      </aside>
+
+      <article data-reveal>
+        <p class="intro">
+          MailKey does one thing: when you are on a website that asks for an
+          email verification code, it checks your Gmail for a code that arrived
+          in the <strong>last 60 minutes</strong> and offers — with one click —
+          to fill it in for you. This policy explains exactly what the extension
+          can see, what it keeps, and what it never does. It is written to be
+          read, not skimmed past.
+        </p>
+
+        <h2>1. What the extension accesses</h2>
+        <p>
+          <strong>Gmail, read-only.</strong> When you click “Connect Gmail,”
+          Chrome's own account system (<code>chrome.identity.getAuthToken</code>)
+          asks you to grant the extension Google's read-only Gmail permission
+          (<code>https://www.googleapis.com/auth/gmail.readonly</code>) for the
+          Google account you are signed into in Chrome. The extension uses it to
+          list and read recent messages so it can find verification codes. There
+          is <strong>no password, no client secret, and no login form inside the
+          extension</strong> — the access token is minted and refreshed by
+          Chrome's identity system, and the extension only ever receives a
+          short-lived read-only token.
+        </p>
+        <p>
+          <strong>Being honest about the permission:</strong> Google does not
+          offer a “last-hour-only” Gmail permission. The OAuth grant you approve
+          technically covers reading your whole mailbox. The one-hour limit
+          is <strong>self-enforced by the extension</strong>: every single request
+          it makes to Gmail includes a filter (<code>after:&lt;one hour ago&gt;</code>)
+          so it only ever asks Google for mail received in the last 60 minutes.
+          This filter lives in one small, auditable function in the source code
+          (<code>src/background/gmail.js</code>), and no request path exists that
+          omits it. If you are not comfortable granting the broader permission
+          even with this self-restriction, do not connect the extension — that
+          caution is reasonable, and this paragraph exists so you can make that
+          call informed.
+        </p>
+        <p>
+          <strong>The page you're on.</strong> The extension only runs on
+          websites you allow (either “all websites” or a specific list you build
+          — your choice in settings). On an allowed page, it looks for
+          verification-code input fields so it can anchor the suggestion chip.
+          It does not read, collect, or transmit the page's content.
+        </p>
+
+        <h2>2. When it accesses Gmail</h2>
+        <p>
+          Only while a verification-code field is present on an allowed site (or
+          when you explicitly press “I'm expecting a code” in the popup). It
+          polls Gmail for a few minutes at most and then stops. It does not scan
+          your mail in the background, on a schedule, or while you browse
+          normally.
+        </p>
+
+        <h2>3. What is stored, and for how long</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Data</th><th>Where</th><th>How long</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Extracted verification code + sender domain</td>
+                <td>Session memory only (<code>chrome.storage.session</code> — never written to disk)</td>
+                <td>Wiped when you use it, when the tab closes, or automatically 60 seconds after it is surfaced</td>
+              </tr>
+              <tr>
+                <td>Google OAuth access token</td>
+                <td>Held by <strong>Chrome's own identity token cache</strong> on your device (not written to the extension's own storage)</td>
+                <td>Managed by Chrome; short-lived (about 1 hour) and refreshed by Chrome as needed. Cleared when you disconnect, revoke access at Google, or uninstall</td>
+              </tr>
+              <tr>
+                <td>Your settings (site mode, allowlist)</td>
+                <td>Chrome extension storage (synced by Chrome if you use Chrome sync)</td>
+                <td>Until you change them or uninstall</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          <strong>Email content is never persisted.</strong> Message bodies are
+          parsed in memory to find the code and immediately discarded. No email
+          — not the body, subject, sender, or metadata — is ever written to disk
+          or retained beyond the moment of parsing.
+        </p>
+
+        <h2>4. What is NEVER done</h2>
+        <ul>
+          <li>
+            <strong>No servers.</strong> The extension has no backend. Your
+            mail, tokens, and codes never leave your device. All Gmail requests
+            go directly from your browser to Google.
+          </li>
+          <li><strong>No analytics, no telemetry, no crash reporting.</strong> Nothing phones home.</li>
+          <li><strong>No sale or sharing of data.</strong> Ever, with anyone, for any purpose.</li>
+          <li><strong>No advertising use.</strong> Your data is never used for ads of any kind.</li>
+          <li>
+            <strong>No auto-fill and no auto-submit.</strong> A code is only
+            entered into a page when you click “Fill,” and the extension never
+            submits a form for you.
+          </li>
+          <li><strong>No reading beyond the last hour.</strong> See section 1.</li>
+          <li>
+            <strong>No human access.</strong> There is no mechanism by which the
+            developer (or anyone else) can see your email — the data never
+            reaches us.
+          </li>
+        </ul>
+
+        <h2>5. Google API Services — Limited Use disclosure</h2>
+        <p>
+          MailKey's use of information received from Google APIs adheres to
+          the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noreferrer">Google
+          API Services User Data Policy</a>, including the <strong>Limited
+          Use</strong> requirements. Specifically:
+        </p>
+        <ul>
+          <li>
+            Gmail data is used <strong>only</strong> to provide the extension's
+            single user-facing feature: detecting and offering to fill
+            verification codes you just received.
+          </li>
+          <li>
+            Gmail data is <strong>not transferred</strong> to anyone, except as
+            necessary to comply with applicable law (there is no technical
+            pathway for transfer — the data never leaves your device).
+          </li>
+          <li>
+            Gmail data is <strong>never used or transferred for advertising</strong>,
+            including retargeting, personalized, or interest-based advertising.
+          </li>
+          <li>
+            Gmail data is <strong>never read by humans</strong>. The extension
+            has no server and no data ever reaches the developer.
+          </li>
+        </ul>
+
+        <h2>6. Your controls</h2>
+        <ul>
+          <li>
+            <strong>Disconnect:</strong> the extension's Options page has a
+            Disconnect button that clears the cached access token from Chrome's
+            identity system.
+          </li>
+          <li>
+            <strong>Revoke at Google:</strong> you can revoke the extension's
+            access at any time
+            at <a href="https://myaccount.google.com/permissions" target="_blank" rel="noreferrer">myaccount.google.com/permissions</a>.
+            This immediately invalidates its access regardless of anything on
+            your device.
+          </li>
+          <li>
+            <strong>Limit where it runs:</strong> in Options, switch from “All
+            websites” to “Only these sites” and the extension's content script
+            will exist only on the sites you list.
+          </li>
+          <li>
+            <strong>Uninstall = everything gone:</strong> removing the extension
+            deletes its stored tokens and settings. There is nothing server-side
+            to delete, because nothing was ever sent anywhere. (For
+            completeness, you may also revoke access at the Google link above
+            after uninstalling.)
+          </li>
+        </ul>
+
+        <h2>7. Children</h2>
+        <p>
+          The extension is not directed at children and does not knowingly
+          collect information from children; it collects no personal information
+          at all beyond what is described above, and none of it leaves your
+          device.
+        </p>
+
+        <h2>8. Changes to this policy</h2>
+        <p>
+          If this policy changes, the updated version will be posted at this URL
+          with a new effective date, and the extension's store listing will link
+          to it. Material changes (anything that would expand what is accessed
+          or stored) will be called out prominently in the extension's release
+          notes. Continued use after a change takes effect constitutes
+          acceptance; if you disagree with a change, disconnect and uninstall —
+          that removes everything.
+        </p>
+
+        <h2>9. Contact</h2>
+        <ul>
+          <li><strong>Developer:</strong> wardkhleif</li>
+          <li><strong>Email:</strong> <a href={`mailto:${site.email}`}>{site.email}</a></li>
+          <li>
+            <strong>Source code:</strong> private / not published (the extension
+            is closed-source; see the notice below)
+          </li>
+        </ul>
+        <p>
+          Questions about this policy or the extension's data handling are
+          welcome at the address above.
+        </p>
+
+        <p class="note">
+          All rights reserved. © 2026 wardkhleif. MailKey is proprietary
+          software; no license to copy, modify, or redistribute is granted.
+        </p>
+        <p class="note">
+          MailKey is not affiliated with or endorsed by Google. Gmail is a
+          trademark of Google LLC.
+        </p>
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Mirrors /privacy, with the MailKey accent standing in for the neutral one. */
+  .legal {
+    --mk: #2563eb;
+    padding: clamp(4.5rem, 10vh, 7rem) 0;
+  }
+
+  :global(:root[data-theme="dark"]) .legal {
+    --mk: #4d82ff;
+  }
+
+  .legal-grid {
+    display: grid;
+    /* minmax(0, …) so the scrolling table can't widen its own column. */
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(3rem, 9vw, 9rem);
+  }
+
+  aside {
+    position: sticky;
+    top: 7rem;
+    align-self: start;
+  }
+
+  aside h1 {
+    margin: 0.8rem 0 1rem;
+    font-size: clamp(2.7rem, 6vw, 4.5rem);
+  }
+
+  aside p {
+    margin: 0 0 0.4rem;
+    color: var(--text-secondary);
+  }
+
+  .back {
+    display: inline-flex;
+    margin-top: 1.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+
+  .back:hover {
+    color: var(--text-primary);
+    border-color: var(--mk);
+  }
+
+  article {
+    min-width: 0;
+    max-width: 45rem;
+  }
+
+  .intro {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    line-height: 1.75;
+    padding-left: 1rem;
+    border-left: 2px solid var(--mk);
+  }
+
+  article h2 {
+    font-size: 1.6rem;
+    margin-top: 2.7rem;
+  }
+
+  article p,
+  article li {
+    color: var(--text-secondary);
+    line-height: 1.8;
+  }
+
+  article ul {
+    padding-left: 1.1rem;
+  }
+
+  article li {
+    margin-bottom: 0.7rem;
+  }
+
+  article li::marker {
+    color: var(--mk);
+  }
+
+  article strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  article a {
+    color: var(--text-primary);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--mk) 45%, var(--border));
+  }
+
+  article a:hover {
+    border-color: var(--mk);
+  }
+
+  code {
+    padding: 0.1rem 0.35rem;
+    border: 1px solid var(--border);
+    border-radius: 0.3rem;
+    background: var(--surface);
+    color: var(--text-primary);
+    font-size: 0.85em;
+    overflow-wrap: break-word;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 0.7rem;
+    background: var(--surface);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 36rem;
+    font-size: 0.9rem;
+  }
+
+  th,
+  td {
+    padding: 0.85rem 1rem;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  th {
+    color: var(--text-primary);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .note {
+    border-left: 2px solid var(--border-strong);
+    padding-left: 1rem;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--text-tertiary);
+  }
+
+  .note:first-of-type {
+    margin-top: 3rem;
+  }
+
+  @media (max-width: 700px) {
+    .legal-grid {
+      grid-template-columns: 1fr;
+    }
+
+    aside {
+      position: static;
+    }
+  }
+</style>
