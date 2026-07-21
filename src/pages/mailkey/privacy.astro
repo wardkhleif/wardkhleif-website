@@ -1,6 +1,10 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { site } from '../../data/site';
+
+/* MailKey's support address is deliberately NOT site.email. It must match the
+   support email on the Google OAuth consent screen, which is tied to the
+   Google Cloud account that owns the project. */
+const MAILKEY_SUPPORT_EMAIL = 'w4rdkh@gmail.com';
 ---
 
 <BaseLayout
@@ -207,7 +211,7 @@ import { site } from '../../data/site';
         <h2>9. Contact</h2>
         <ul>
           <li><strong>Developer:</strong> wardkhleif</li>
-          <li><strong>Email:</strong> <a href={`mailto:${site.email}`}>{site.email}</a></li>
+          <li><strong>Email:</strong> <a href={`mailto:${MAILKEY_SUPPORT_EMAIL}`}>{MAILKEY_SUPPORT_EMAIL}</a></li>
           <li>
             <strong>Source code:</strong> private / not published (the extension
             is closed-source; see the notice below)
