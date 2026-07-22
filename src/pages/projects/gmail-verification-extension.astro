@@ -78,18 +78,23 @@ const guarantees = [
                 <circle cx="64" cy="76" r="9.5" fill="#2563EB"></circle>
                 <path d="M59.5 80 H68.5 L72 93 H56 Z" fill="#2563EB"></path>
               </svg>
-              <span class="wordmark">MailKey</span>
+              <h1 class="wordmark">MailKey</h1>
               <span class="chip-status">
                 <span class="pulse" aria-hidden="true"></span>
                 In development — preparing for Chrome Web Store review
               </span>
             </div>
 
-            <h1 class="title" data-lines>
+            <p class="app-summary" data-reveal>
+              MailKey is a Chrome extension that fills email verification
+              codes for you.
+            </p>
+
+            <p class="title" data-lines>
               <span class="line"><span>The code you</span></span>
               <span class="line"><span>just asked for,</span></span>
               <span class="line"><span>one click away.</span></span>
-            </h1>
+            </p>
 
             <p class="lede" data-reveal data-reveal-delay="220">
               Apple's SMS autofill, moved to email. MailKey is a Chrome
@@ -329,9 +334,17 @@ const guarantees = [
   }
 
   .wordmark {
-    font-size: 1.15rem;
-    font-weight: 600;
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 650;
     letter-spacing: -0.02em;
+  }
+
+  .app-summary {
+    margin: 0 0 1.25rem;
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--text-secondary);
   }
 
   .chip-status {
